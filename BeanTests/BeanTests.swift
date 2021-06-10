@@ -10,6 +10,11 @@ import XCTest
 
 class BeanTests: XCTestCase {
 
+    @Bean(name: "dddd")
+    var namee:String?
+    @Coconut
+    var keep:Kip = Kip(n: "dddd", m: 44)
+    
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
     }
@@ -19,15 +24,17 @@ class BeanTests: XCTestCase {
     }
 
     func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+        $namee.setState(state: "ddlll")
+//        $keep.setState(state: Kip(n: "dddd", m: 5))
+        $keep.observer = BeanObserver(callback: { a, b in
+            print(a,b)
+        })
+        print(self.namee)
+        print(self.keep)
+        self.$keep.setState(state: Kip(n: "dssd", m: 999))
     }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
-    }
-
+}
+struct Kip {
+    var n:String
+    var m:Int
 }

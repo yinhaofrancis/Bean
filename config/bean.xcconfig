@@ -7,4 +7,5 @@
 
 // Configuration settings file format documentation can be found at:
 // https://help.apple.com/xcode/#/dev745c5c974
-ARCH_STAND=
+ARCHS_STANDARD=armv7 arm64 x86_64
+BASE_SDK=macosx

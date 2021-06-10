@@ -18,9 +18,9 @@ public class WeakBean<T:AnyObject>:Hashable{
     
     weak var bean:T?
 }
-public class Shoots{
+public class Container{
     private var lock:UnsafeMutablePointer<pthread_mutex_t> = UnsafeMutablePointer.allocate(capacity: 1)
-    public static var shared:Shoots = Shoots()
+    public static var shared:Container = Container()
     public func query<T>(name:String,type:T.Type)->Pods<T>{
         pthread_mutex_lock(self.lock)
         let name = "\(type)"
@@ -46,7 +46,7 @@ public class Pods<T>{
         didSet{
             for i in beans {
                 guard let ob = i.bean?.observer else { continue }
-                ob.callback(oldValue,content)
+                ob.change(from: oldValue, to: content)
             }
             pthread_mutex_lock(self.lock)
             self.beans = self.beans.filter { i in
@@ -63,9 +63,11 @@ public class Pods<T>{
         pthread_mutex_destroy(self.lock)
     }
 }
-public struct BeanObserver<T>{
+public class BeanObserver<T>{
 
-    public var callback:(_ from:T?,_ to:T?)->Void
+    public func change(from:T?,to:T?)->Void{
+        
+    }
 }
 
 
@@ -91,7 +93,7 @@ public class Bean<T>:Hashable{
     public var observer:BeanObserver<T>?
     public init(name:String) {
         self.name = name
-        self.pods = Shoots.shared.query(name: self.name, type: T.self)
+        self.pods = Container.shared.query(name: self.name, type: T.self)
         let wb = WeakBean<Bean<T>>()
         wb.bean = self
         self.pods.beans.insert(wb)

@@ -11,6 +11,7 @@
 		A9D4DC0B2671A45100C0E846 /* BeanTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D4DC0A2671A45100C0E846 /* BeanTests.swift */; };
 		A9D4DC1D2671A90800C0E846 /* Bean.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D4DC1C2671A90800C0E846 /* Bean.swift */; };
 		A9D4DC202671A91E00C0E846 /* bean.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = A9D4DC1F2671A91E00C0E846 /* bean.xcconfig */; };
+		A9D4DC222671B0C800C0E846 /* Coconut.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D4DC212671B0C800C0E846 /* Coconut.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,6 +32,7 @@
 		A9D4DC0C2671A45100C0E846 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A9D4DC1C2671A90800C0E846 /* Bean.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bean.swift; sourceTree = "<group>"; };
 		A9D4DC1F2671A91E00C0E846 /* bean.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = bean.xcconfig; sourceTree = "<group>"; };
+		A9D4DC212671B0C800C0E846 /* Coconut.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coconut.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,6 +78,7 @@
 			children = (
 				A9D4DC002671A45100C0E846 /* Info.plist */,
 				A9D4DC1C2671A90800C0E846 /* Bean.swift */,
+				A9D4DC212671B0C800C0E846 /* Coconut.swift */,
 			);
 			path = Bean;
 			sourceTree = "<group>";
@@ -207,6 +210,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A9D4DC1D2671A90800C0E846 /* Bean.swift in Sources */,
+				A9D4DC222671B0C800C0E846 /* Coconut.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -231,6 +235,7 @@
 /* Begin XCBuildConfiguration section */
 		A9D4DC0E2671A45100C0E846 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A9D4DC1F2671A91E00C0E846 /* bean.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -281,7 +286,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -295,6 +301,7 @@
 		};
 		A9D4DC0F2671A45100C0E846 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A9D4DC1F2671A91E00C0E846 /* bean.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -339,7 +346,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -353,6 +361,7 @@
 		};
 		A9D4DC112671A45100C0E846 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A9D4DC1F2671A91E00C0E846 /* bean.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -368,9 +377,12 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.francis.Bean;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos macos";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -379,6 +391,7 @@
 		};
 		A9D4DC122671A45100C0E846 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A9D4DC1F2671A91E00C0E846 /* bean.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -396,7 +409,9 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.francis.Bean;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos macos";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -404,6 +419,7 @@
 		};
 		A9D4DC142671A45100C0E846 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A9D4DC1F2671A91E00C0E846 /* bean.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -416,6 +432,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.francis.BeanTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -423,6 +440,7 @@
 		};
 		A9D4DC152671A45100C0E846 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A9D4DC1F2671A91E00C0E846 /* bean.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -435,6 +453,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.francis.BeanTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
