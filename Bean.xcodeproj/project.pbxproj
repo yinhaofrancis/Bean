@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		A9D4DC062671A45100C0E846 /* Bean.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9D4DBFC2671A45100C0E846 /* Bean.framework */; };
 		A9D4DC0B2671A45100C0E846 /* BeanTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D4DC0A2671A45100C0E846 /* BeanTests.swift */; };
-		A9D4DC0D2671A45100C0E846 /* Bean.h in Headers */ = {isa = PBXBuildFile; fileRef = A9D4DBFF2671A45100C0E846 /* Bean.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A9D4DC1D2671A90800C0E846 /* Bean.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D4DC1C2671A90800C0E846 /* Bean.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -24,11 +24,11 @@
 
 /* Begin PBXFileReference section */
 		A9D4DBFC2671A45100C0E846 /* Bean.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Bean.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		A9D4DBFF2671A45100C0E846 /* Bean.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Bean.h; sourceTree = "<group>"; };
 		A9D4DC002671A45100C0E846 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A9D4DC052671A45100C0E846 /* BeanTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BeanTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9D4DC0A2671A45100C0E846 /* BeanTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeanTests.swift; sourceTree = "<group>"; };
 		A9D4DC0C2671A45100C0E846 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A9D4DC1C2671A90800C0E846 /* Bean.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bean.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,8 +71,8 @@
 		A9D4DBFE2671A45100C0E846 /* Bean */ = {
 			isa = PBXGroup;
 			children = (
-				A9D4DBFF2671A45100C0E846 /* Bean.h */,
 				A9D4DC002671A45100C0E846 /* Info.plist */,
+				A9D4DC1C2671A90800C0E846 /* Bean.swift */,
 			);
 			path = Bean;
 			sourceTree = "<group>";
@@ -93,7 +93,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A9D4DC0D2671A45100C0E846 /* Bean.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -147,6 +146,7 @@
 				TargetAttributes = {
 					A9D4DBFB2671A45100C0E846 = {
 						CreatedOnToolsVersion = 12.5;
+						LastSwiftMigration = 1250;
 					};
 					A9D4DC042671A45100C0E846 = {
 						CreatedOnToolsVersion = 12.5;
@@ -194,6 +194,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A9D4DC1D2671A90800C0E846 /* Bean.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -341,6 +342,7 @@
 		A9D4DC112671A45100C0E846 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = W8LHF9DL7C;
@@ -357,6 +359,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.francis.Bean;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -365,6 +368,7 @@
 		A9D4DC122671A45100C0E846 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = W8LHF9DL7C;
@@ -389,6 +393,7 @@
 		A9D4DC142671A45100C0E846 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = W8LHF9DL7C;
 				INFOPLIST_FILE = BeanTests/Info.plist;
@@ -407,6 +412,7 @@
 		A9D4DC152671A45100C0E846 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = W8LHF9DL7C;
 				INFOPLIST_FILE = BeanTests/Info.plist;

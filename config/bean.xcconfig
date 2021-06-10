@@ -1,0 +1,10 @@
+//
+//  bean.xcconfig
+//  Bean
+//
+//  Created by hao yin on 2021/6/10.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+ARCH_STAND=
