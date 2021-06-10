@@ -10,6 +10,7 @@
 		A9D4DC062671A45100C0E846 /* Bean.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9D4DBFC2671A45100C0E846 /* Bean.framework */; };
 		A9D4DC0B2671A45100C0E846 /* BeanTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D4DC0A2671A45100C0E846 /* BeanTests.swift */; };
 		A9D4DC1D2671A90800C0E846 /* Bean.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D4DC1C2671A90800C0E846 /* Bean.swift */; };
+		A9D4DC202671A91E00C0E846 /* bean.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = A9D4DC1F2671A91E00C0E846 /* bean.xcconfig */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,6 +30,7 @@
 		A9D4DC0A2671A45100C0E846 /* BeanTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeanTests.swift; sourceTree = "<group>"; };
 		A9D4DC0C2671A45100C0E846 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A9D4DC1C2671A90800C0E846 /* Bean.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bean.swift; sourceTree = "<group>"; };
+		A9D4DC1F2671A91E00C0E846 /* bean.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = bean.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,6 +55,7 @@
 		A9D4DBF22671A45000C0E846 = {
 			isa = PBXGroup;
 			children = (
+				A9D4DC1E2671A91E00C0E846 /* config */,
 				A9D4DBFE2671A45100C0E846 /* Bean */,
 				A9D4DC092671A45100C0E846 /* BeanTests */,
 				A9D4DBFD2671A45100C0E846 /* Products */,
@@ -84,6 +87,14 @@
 				A9D4DC0C2671A45100C0E846 /* Info.plist */,
 			);
 			path = BeanTests;
+			sourceTree = "<group>";
+		};
+		A9D4DC1E2671A91E00C0E846 /* config */ = {
+			isa = PBXGroup;
+			children = (
+				A9D4DC1F2671A91E00C0E846 /* bean.xcconfig */,
+			);
+			path = config;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -177,6 +188,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A9D4DC202671A91E00C0E846 /* bean.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
