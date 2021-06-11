@@ -39,7 +39,9 @@ public class Pods<T>{
         didSet{
             for i in beans {
                 guard let ob = i.bean?.observer else { continue }
-                ob.change(from: oldValue, to: content)
+                i.bean?.queue.async {
+                    ob.change(from: oldValue, to: self.content)
+                }
             }
             pthread_mutex_lock(self.lock)
             self.beans = self.beans.filter { i in
@@ -83,12 +85,13 @@ public class Bean<T>{
         self.pods.content = state
     }
     public var pods:Pods<T>
+    var queue:DispatchQueue
     public var observer:BeanObserver<T>?
-    public init(name:String) {
+    public init(name:String,queue:DispatchQueue = DispatchQueue.main) {
         self.name = name
         self.pods = Container.shared.query(name: self.name, type: T.self)
-        
         let wb = WeakBean<Bean<T>>()
+        self.queue = queue
         wb.bean = self
         self.pods.beans.append(wb)
         print("pods :", Unmanaged.passUnretained(self.pods).toOpaque())
