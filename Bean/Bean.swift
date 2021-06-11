@@ -7,14 +7,7 @@
 
 import Foundation
 
-public class WeakBean<T:AnyObject>:Hashable{
-    public static func == (lhs: WeakBean, rhs: WeakBean) -> Bool {
-        return lhs.hashValue == rhs.hashValue
-    }
-    public func hash(into hasher: inout Hasher) {
-        let p = UnsafeRawBufferPointer(start: Unmanaged<WeakBean<T>>.passUnretained(self).toOpaque(), count: MemoryLayout<WeakBean<T>>.size)
-        hasher.combine(bytes: p)
-    }
+public class WeakBean<T:AnyObject>{
     
     weak var bean:T?
 }
@@ -23,7 +16,7 @@ public class Container{
     public static var shared:Container = Container()
     public func query<T>(name:String,type:T.Type)->Pods<T>{
         pthread_mutex_lock(self.lock)
-        let name = "\(type)"
+        let name = name
         var pod = self.dictionary[name] as? Pods<T>
         if(pod == nil){
             pod = Pods<T>()
@@ -55,7 +48,7 @@ public class Pods<T>{
             pthread_mutex_unlock(self.lock)
         }
     }
-    public var beans:Set<WeakBean<Bean<T>>> = Set()
+    public var beans:Array<WeakBean<Bean<T>>> = Array()
     public init() {
         pthread_mutex_init(self.lock, nil)
     }
@@ -65,21 +58,21 @@ public class Pods<T>{
 }
 public class BeanObserver<T>{
 
+    public typealias Callback = (T?,T?)->Void
+    public func setChange(call:@escaping Callback){
+        self.call = call
+    }
+    public var call:Callback?
     public func change(from:T?,to:T?)->Void{
-        
+        self.call?(from,to)
+    }
+    public init(callback:Callback? = nil) {
+        self.call = callback;
     }
 }
 
-
 @propertyWrapper
-public class Bean<T>:Hashable{
-    public static func == (lhs: Bean<T>, rhs: Bean<T>) -> Bool {
-        lhs.hashValue == rhs.hashValue
-    }
-    public func hash(into hasher: inout Hasher) {
-        let p = UnsafeRawBufferPointer(start: Unmanaged<Bean<T>>.passUnretained(self).toOpaque(), count: MemoryLayout<Bean<T>>.size)
-        hasher.combine(bytes: p)
-    }
+public class Bean<T>{
     public private(set) var name:String
     public var wrappedValue:T? {
         get{
@@ -94,11 +87,15 @@ public class Bean<T>:Hashable{
     public init(name:String) {
         self.name = name
         self.pods = Container.shared.query(name: self.name, type: T.self)
+        
         let wb = WeakBean<Bean<T>>()
         wb.bean = self
-        self.pods.beans.insert(wb)
-        guard let state = wrappedValue else { return }
-        self.setState(state: state)
+        self.pods.beans.append(wb)
+        print("pods :", Unmanaged.passUnretained(self.pods).toOpaque())
+        print("ws   :", Unmanaged.passUnretained(wb).toOpaque())
+        print("self :", Unmanaged.passUnretained(self).toOpaque())
+        print("beans:", self.pods.beans)
+        print("pods count:",self.pods.beans.count)
     }
     public var projectedValue:Bean<T>{
         return self

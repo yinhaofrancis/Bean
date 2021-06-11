@@ -19,7 +19,7 @@ public class Coconut<T>{
     }
     private var state:T{
         didSet{
-            self.observer?.callback(oldValue,wrappedValue)
+            self.observer?.change(from: oldValue, to: self.state)
         }
     }
     public var observer:BeanObserver<T>?

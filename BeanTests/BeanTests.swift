@@ -6,35 +6,64 @@
 //
 
 import XCTest
+
 @testable import Bean
 
 class BeanTests: XCTestCase {
 
-    @Bean(name: "dddd")
-    var namee:String?
-    @Coconut
-    var keep:Kip = Kip(n: "dddd", m: 44)
-    
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
+    var timer:Timer?
+    var bvc:BeanVC!
+    var bvcw:Bean2VC!
+//    override func setUpWithError() throws {
+//        // Put setup code here. This method is called before the invocation of each test method in the class.
+//    }
+//
+//    override func tearDownWithError() throws {
+//        // Put teardown code here. This method is called after the invocation of each test method in the class.
+//    }
 
     func testExample() throws {
-        $namee.setState(state: "ddlll")
-//        $keep.setState(state: Kip(n: "dddd", m: 5))
-        $keep.observer = BeanObserver(callback: { a, b in
-            print(a,b)
-        })
-        print(self.namee)
-        print(self.keep)
-        self.$keep.setState(state: Kip(n: "dssd", m: 999))
+        bvc = BeanVC()
+        bvcw = Bean2VC()
+        if #available(macOS 10.12, *) {
+            
+            timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [weak self]t in
+                self?.bvc.go()
+            })
+        }
+        RunLoop.main.run()
     }
 }
-struct Kip {
-    var n:String
-    var m:Int
+
+
+public struct Model{
+    var name:String
+    var uid:String
+    var count:Int
+}
+
+public class BeanVC:NSObject{
+    
+    @Bean(name: "Model")
+    var model:Model?
+    
+    
+    func go(){
+        let c = self.model?.count ?? 0
+        $model.setState(state: Model(name: "dsd", uid: "dsdsd", count: c + 1))
+    }
+}
+
+
+public class Bean2VC:NSObject{
+    
+    @Bean(name: "Model")
+    var model:Model?
+    public override init() {
+        super.init()
+        $model.observer = BeanObserver()
+        $model.observer?.setChange(call: { a, b in
+            print(b as Any)
+        })
+    }
 }
