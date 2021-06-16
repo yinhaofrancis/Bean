@@ -33,7 +33,7 @@ class ViewController: UIViewController {
     
     @Bean(name: "Model")
     var model:Model?
-    @Mount
+    @Carrot
     var mo:mok!
     
     override func viewDidLoad() {
@@ -51,7 +51,7 @@ class ViewController2: UIViewController {
     
     @Bean(name: "Model")
     var model:Model?
-    @Mount
+    @Carrot
     var mo:mok!
     
     override func viewDidLoad() {

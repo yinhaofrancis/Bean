@@ -83,7 +83,7 @@ public class SeedBuket{
 }
 
 @propertyWrapper
-public struct Mount<T:Seed>{
+public struct Carrot<T:Seed>{
     
     public var name:String
     
