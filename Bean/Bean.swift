@@ -94,11 +94,6 @@ public class Bean<T>{
         self.queue = queue
         wb.bean = self
         self.pods.beans.append(wb)
-        print("pods :", Unmanaged.passUnretained(self.pods).toOpaque())
-        print("ws   :", Unmanaged.passUnretained(wb).toOpaque())
-        print("self :", Unmanaged.passUnretained(self).toOpaque())
-        print("beans:", self.pods.beans)
-        print("pods count:",self.pods.beans.count)
     }
     public var projectedValue:Bean<T>{
         return self

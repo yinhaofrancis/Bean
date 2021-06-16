@@ -13,27 +13,55 @@ public struct Model{
     var count:Int
 }
 
+public class mok:Seed{
+    public static func create() -> Seed {
+        mok()
+    }
+    
+    public static var type: SeedType = .singlton
+    
+   
+    
+    var name:String = "asda"
+    func call(){
+        print(name);
+    }
+}
 
 class ViewController: UIViewController {
 
     
     @Bean(name: "Model")
     var model:Model?
-    
+    @Mount
+    var mo:mok!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(self.model)
-        $model.setState(state: Model(name: "a", uid: "a", count: Int(arc4random())))
-        print(self.model)
-        $model.observer = BeanObserver(callback:{ a , b in
-            print("------")
+        self.$model.setState(state: Model(name: "dadas\(arc4random())", uid: "", count: 0))
+        self.$model.observer = BeanObserver(callback: { a, b in
             print(a,b)
-            print("------")
         })
-        // Do any additional setup after loading the view.
     }
 
 
+}
+class ViewController2: UIViewController {
+
+    
+    @Bean(name: "Model")
+    var model:Model?
+    @Mount
+    var mo:mok!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        print(self.model?.name)
+    }
+
+    @IBAction func change(_ sender: Any) {
+        self.$model.setState(state: Model(name: "dadas\(arc4random())", uid: "", count: 0))
+    }
+    
 }
 
