@@ -38,10 +38,11 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.$model.setState(state: Model(name: "dadas\(arc4random())", uid: "", count: 0))
-        self.$model.observer = BeanObserver(callback: { a, b in
+        self._model.setState(state: Model(name: "dadas\(arc4random())", uid: "", count: 0))
+        self.$model.setChange { a, b in
             print(a,b)
-        })
+        }
+        
     }
 
 
@@ -51,16 +52,26 @@ class ViewController2: UIViewController {
     
     @Bean(name: "Model")
     var model:Model?
-    @Carrot
-    var mo:mok!
+    @Coconut
+    var mo:String = "das"
+    
+    @Action
+    var btn:UIButton = UIButton(type: .system)
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.view.addSubview(btn)
+        self.btn.frame = CGRect(x: 100, y: 100, width: 44, height:44);
+        self.btn.setTitle("ANV", for: .normal)
+        self.btn.backgroundColor = UIColor.red;
+        self._btn.add(event: .touchUpInside) { a in
+            print(a)
+        }
         print(self.model?.name)
     }
 
     @IBAction func change(_ sender: Any) {
-        self.$model.setState(state: Model(name: "dadas\(arc4random())", uid: "", count: 0))
+        self._model.setState(state: Model(name: "dadas\(arc4random())", uid: "", count: 0))
     }
     
 }

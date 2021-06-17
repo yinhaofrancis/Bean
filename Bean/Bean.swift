@@ -95,7 +95,10 @@ public class Bean<T>{
         wb.bean = self
         self.pods.beans.append(wb)
     }
-    public var projectedValue:Bean<T>{
-        return self
+    public var projectedValue:BeanObserver<T>{
+        if self.observer == nil{
+            self.observer = BeanObserver()
+        }
+        return self.observer!
     }
 }
