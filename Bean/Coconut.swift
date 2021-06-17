@@ -22,12 +22,15 @@ public class Coconut<T>{
             self.observer?.change(from: oldValue, to: self.state)
         }
     }
-    public var observer:BeanObserver<T>?
+    private var observer:BeanObserver<T>?
     
     public init(wrappedValue:T){
         self.state = wrappedValue
     }
-    public var projectedValue:Coconut<T>{
-        return self
+    public var projectedValue:BeanObserver<T>{
+        if self.observer == nil{
+            self.observer = BeanObserver()
+        }
+        return self.observer!
     }
 }

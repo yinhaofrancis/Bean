@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A92F8DBA267AEA8800402372 /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F8DB9267AEA8800402372 /* Action.swift */; };
 		A97268C02673226B001506F4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97268BF2673226B001506F4 /* AppDelegate.swift */; };
 		A97268C42673226B001506F4 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97268C32673226B001506F4 /* ViewController.swift */; };
 		A97268C72673226B001506F4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A97268C52673226B001506F4 /* Main.storyboard */; };
@@ -54,6 +55,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		A92F8DB9267AEA8800402372 /* Action.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Action.swift; sourceTree = "<group>"; };
 		A97268BD2673226B001506F4 /* example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A97268BF2673226B001506F4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A97268C32673226B001506F4 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -150,6 +152,7 @@
 				A9D4DC1C2671A90800C0E846 /* Bean.swift */,
 				A9D4DC212671B0C800C0E846 /* Coconut.swift */,
 				A97268D8267361CD001506F4 /* Carrot.swift */,
+				A92F8DB9267AEA8800402372 /* Action.swift */,
 			);
 			path = Bean;
 			sourceTree = "<group>";
@@ -323,6 +326,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A9D4DC1D2671A90800C0E846 /* Bean.swift in Sources */,
+				A92F8DBA267AEA8800402372 /* Action.swift in Sources */,
 				A9D4DC222671B0C800C0E846 /* Coconut.swift in Sources */,
 				A97268D9267361CD001506F4 /* Carrot.swift in Sources */,
 			);
@@ -374,6 +378,7 @@
 		A97268CE26732270001506F4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = example/example.entitlements;
@@ -396,6 +401,7 @@
 		A97268CF26732270001506F4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = example/example.entitlements;
@@ -417,7 +423,6 @@
 		};
 		A9D4DC0E2671A45100C0E846 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A9D4DC1F2671A91E00C0E846 /* bean.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -483,7 +488,6 @@
 		};
 		A9D4DC0F2671A45100C0E846 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A9D4DC1F2671A91E00C0E846 /* bean.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -543,7 +547,6 @@
 		};
 		A9D4DC112671A45100C0E846 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A9D4DC1F2671A91E00C0E846 /* bean.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -573,7 +576,6 @@
 		};
 		A9D4DC122671A45100C0E846 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A9D4DC1F2671A91E00C0E846 /* bean.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -601,7 +603,6 @@
 		};
 		A9D4DC142671A45100C0E846 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A9D4DC1F2671A91E00C0E846 /* bean.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -622,7 +623,6 @@
 		};
 		A9D4DC152671A45100C0E846 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A9D4DC1F2671A91E00C0E846 /* bean.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
