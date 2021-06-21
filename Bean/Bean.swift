@@ -11,9 +11,9 @@ public class WeakBean<T:AnyObject>{
     
     weak var bean:T?
 }
-public class Container{
+public class BeanContainer{
     private var lock:UnsafeMutablePointer<pthread_mutex_t> = UnsafeMutablePointer.allocate(capacity: 1)
-    public static var shared:Container = Container()
+    public static var shared:BeanContainer = BeanContainer()
     public func query<T>(name:String,type:T.Type)->Pods<T>{
         pthread_mutex_lock(self.lock)
         let name = name
@@ -89,7 +89,7 @@ public class Bean<T>{
     public var observer:BeanObserver<T>?
     public init(name:String,queue:DispatchQueue = DispatchQueue.main) {
         self.name = name
-        self.pods = Container.shared.query(name: self.name, type: T.self)
+        self.pods = BeanContainer.shared.query(name: self.name, type: T.self)
         let wb = WeakBean<Bean<T>>()
         self.queue = queue
         wb.bean = self

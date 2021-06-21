@@ -10,8 +10,17 @@ import Foundation
 public enum SeedType{
     
     case singlton
+    case strong
     case normal
     
+}
+public class WeakSeed<T:AnyObject>{
+    
+    weak var seed:T?
+    
+    init(seed:T){
+        self.seed = seed
+    }
 }
 public protocol SeedContext{
     
@@ -32,6 +41,8 @@ public class SeedBuket{
     public var seeds:[String:Seed.Type] = [:]
     
     public var sigltenObject:[String:Seed] = [:]
+    
+    public var strongObject:[String:WeakSeed<AnyObject>] = [:]
     
     public func addSeed<T:Seed>(type:T.Type,name:String){
         pthread_rwlock_wrlock(self.rwlock)
@@ -70,7 +81,14 @@ public class SeedBuket{
             }else{
                 return self.createSiglton(cls: cls, name: name)
             }
-        }else{
+        }else if cls.type == .strong{
+            if let obj = self.strongObject[name]?.seed{
+                return obj as? T
+            }else{
+                return self.createStrong(cls: cls, name: name)
+            }
+        }
+        else{
             return cls.create() as? T
         }
     }
@@ -80,16 +98,34 @@ public class SeedBuket{
         self.sigltenObject[name] = obj
         return obj as! T
     }
+    private func createStrong<T:Seed>(cls:T.Type,name:String)->T{
+        let obj = cls.create()
+        let ws = WeakSeed(seed: obj as AnyObject)
+        self.strongObject[name] = ws
+        return obj as! T
+    }
 }
 
 @propertyWrapper
-public struct Carrot<T:Seed>{
+public class Carrot<T:Seed>{
     
     public var name:String
     
+    public var strongObject:T?
     public var wrappedValue:T? {
         
-        return SeedBuket.shared.create(name: self.name,type: T.self)
+        if T.type == .strong{
+            if (self.strongObject != nil){
+                return self.strongObject
+            }else{
+                self.strongObject = SeedBuket.shared.create(name: self.name,type: T.self);
+                return self.strongObject
+            }
+            
+        }else{
+            return SeedBuket.shared.create(name: self.name,type: T.self)
+        }
+        
         
     }
     public init(name:String = "\(T.self)") {

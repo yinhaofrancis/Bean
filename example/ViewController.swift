@@ -13,6 +13,16 @@ public struct Model{
     var count:Int
 }
 
+public class MModel:Seed{
+    public static var type: SeedType = .strong
+    
+    public static func create() -> Seed {
+        MModel()
+    }
+    
+    var name:String = ""
+}
+
 public class mok:Seed{
     public static func create() -> Seed {
         mok()
@@ -36,24 +46,33 @@ class ViewController: UIViewController {
     @Carrot
     var mo:mok!
     
+    @Carrot
+    var mm:MModel?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self._model.setState(state: Model(name: "dadas\(arc4random())", uid: "", count: 0))
         self.$model.setChange { a, b in
             print(a,b)
         }
-        
+        self.mo.name = "AAA \(arc4random())"
+        self.mm?.name = "BBB \(arc4random())"
+        print(self.mo.name)
+        print(self.mm?.name)
     }
-
-
 }
 class ViewController2: UIViewController {
 
     
     @Bean(name: "Model")
     var model:Model?
-    @Coconut
-    var mo:String = "das"
+
+    
+    @Carrot
+    var mo:mok!
+    
+    @Carrot
+    var mm:MModel?
     
     @Action
     var btn:UIButton = UIButton(type: .system)
@@ -67,7 +86,8 @@ class ViewController2: UIViewController {
         self._btn.add(event: .touchUpInside) { a in
             print(a)
         }
-        print(self.model?.name)
+        print(self.mo.name)
+        print(self.mm?.name)
     }
 
     @IBAction func change(_ sender: Any) {

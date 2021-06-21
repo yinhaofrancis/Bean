@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JL3-aV-ibg">
+                    <rect key="frame" x="143" y="219.5" width="128" height="457"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FNg-bW-b3G">
+                            <rect key="frame" x="0.0" y="0.0" width="128" height="152.5"/>
+                            <color key="backgroundColor" systemColor="systemPinkColor"/>
+                        </view>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BtP-Qt-ENh">
+                            <rect key="frame" x="0.0" y="152.5" width="128" height="152"/>
+                            <color key="backgroundColor" systemColor="systemGreenColor"/>
+                        </view>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vSx-ip-Pbw">
+                            <rect key="frame" x="0.0" y="304.5" width="128" height="152.5"/>
+                            <color key="backgroundColor" systemColor="systemBlueColor"/>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <constraints>
+                        <constraint firstItem="FNg-bW-b3G" firstAttribute="leading" secondItem="JL3-aV-ibg" secondAttribute="leading" id="1xz-R3-aTU"/>
+                        <constraint firstAttribute="width" constant="128" id="6Kn-SU-kdB"/>
+                        <constraint firstAttribute="height" constant="457" id="A7Q-e7-xKF"/>
+                        <constraint firstItem="BtP-Qt-ENh" firstAttribute="leading" secondItem="JL3-aV-ibg" secondAttribute="leading" id="KmF-ZW-ht6"/>
+                        <constraint firstItem="vSx-ip-Pbw" firstAttribute="top" secondItem="BtP-Qt-ENh" secondAttribute="bottom" id="MFq-er-wKe"/>
+                        <constraint firstItem="FNg-bW-b3G" firstAttribute="top" secondItem="JL3-aV-ibg" secondAttribute="top" id="MLX-9i-bAh"/>
+                        <constraint firstItem="BtP-Qt-ENh" firstAttribute="top" secondItem="FNg-bW-b3G" secondAttribute="bottom" id="WUu-qU-Pxy"/>
+                        <constraint firstItem="vSx-ip-Pbw" firstAttribute="leading" secondItem="JL3-aV-ibg" secondAttribute="leading" id="Zfd-gd-jog"/>
+                        <constraint firstItem="BtP-Qt-ENh" firstAttribute="height" secondItem="FNg-bW-b3G" secondAttribute="height" id="cdM-z2-18s"/>
+                        <constraint firstAttribute="trailing" secondItem="vSx-ip-Pbw" secondAttribute="trailing" id="oRc-DF-vUd"/>
+                        <constraint firstAttribute="bottom" secondItem="vSx-ip-Pbw" secondAttribute="bottom" id="t3d-Iv-oWa"/>
+                        <constraint firstAttribute="trailing" secondItem="BtP-Qt-ENh" secondAttribute="trailing" id="t4Y-Zj-DEk"/>
+                        <constraint firstItem="vSx-ip-Pbw" firstAttribute="height" secondItem="FNg-bW-b3G" secondAttribute="height" id="zjp-4E-anY"/>
+                        <constraint firstAttribute="trailing" secondItem="FNg-bW-b3G" secondAttribute="trailing" id="zw6-sc-Kg3"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="JL3-aV-ibg" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="bsl-3k-4BH"/>
+                <constraint firstItem="JL3-aV-ibg" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="juv-R5-jYt"/>
+            </constraints>
+            <point key="canvasLocation" x="139" y="151"/>
+        </view>
+    </objects>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemBlueColor">
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemGreenColor">
+            <color red="0.20392156862745098" green="0.7803921568627451" blue="0.34901960784313724" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemPinkColor">
+            <color red="1" green="0.17647058823529413" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>
