@@ -94,14 +94,18 @@ public class SeedBuket{
     }
     
     private func createSiglton<T:Seed>(cls:T.Type,name:String)->T{
+        pthread_rwlock_wrlock(self.rwlock)
         let obj = cls.create()
         self.sigltenObject[name] = obj
+        pthread_rwlock_unlock(self.rwlock)
         return obj as! T
     }
     private func createStrong<T:Seed>(cls:T.Type,name:String)->T{
+        pthread_rwlock_wrlock(self.rwlock)
         let obj = cls.create()
         let ws = WeakSeed(seed: obj as AnyObject)
         self.strongObject[name] = ws
+        pthread_rwlock_unlock(self.rwlock)
         return obj as! T
     }
 }
