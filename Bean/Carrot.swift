@@ -76,13 +76,13 @@ public class SeedBuket{
         }
         
         if cls.type == .singlton{
-            if let obj = self.sigltenObject[name]{
-                return obj as? T
+            if let obj = self.readSiglton(name: name,type:type){
+                return obj
             }else{
                 return self.createSiglton(cls: cls, name: name)
             }
         }else if cls.type == .strong{
-            if let obj = self.strongObject[name]?.seed{
+            if let obj = self.readStrong(name: name, type: type){
                 return obj as? T
             }else{
                 return self.createStrong(cls: cls, name: name)
@@ -107,6 +107,19 @@ public class SeedBuket{
         self.strongObject[name] = ws
         pthread_rwlock_unlock(self.rwlock)
         return obj as! T
+    }
+    private func readSiglton<T:Seed>(name:String,type:T.Type)->T?{
+        pthread_rwlock_rdlock(self.rwlock)
+        let s = self.sigltenObject[name]
+        pthread_rwlock_unlock(self.rwlock)
+        return s as? T
+    }
+    
+    private func readStrong<T:Seed>(name:String,type:T.Type)->T?{
+        pthread_rwlock_rdlock(self.rwlock)
+        let s = self.strongObject[name]?.seed
+        pthread_rwlock_unlock(self.rwlock)
+        return s as? T
     }
 }
 
