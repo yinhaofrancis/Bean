@@ -17,7 +17,6 @@
 		A97268D4267325AD001506F4 /* Bean.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A9D4DBFC2671A45100C0E846 /* Bean.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A97268D9267361CD001506F4 /* Carrot.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97268D8267361CD001506F4 /* Carrot.swift */; };
 		A97644E2267C353A0063A384 /* Constaint.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97644E1267C353A0063A384 /* Constaint.swift */; };
-		A97644E4267C886B0063A384 /* Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97644E3267C886B0063A384 /* Layout.swift */; };
 		A97644E6267C9D120063A384 /* View.xib in Resources */ = {isa = PBXBuildFile; fileRef = A97644E5267C9D120063A384 /* View.xib */; };
 		A9D4DC062671A45100C0E846 /* Bean.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9D4DBFC2671A45100C0E846 /* Bean.framework */; };
 		A9D4DC0B2671A45100C0E846 /* BeanTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D4DC0A2671A45100C0E846 /* BeanTests.swift */; };
@@ -340,7 +339,6 @@
 				A92F8DBA267AEA8800402372 /* Action.swift in Sources */,
 				A9D4DC222671B0C800C0E846 /* Coconut.swift in Sources */,
 				A97268D9267361CD001506F4 /* Carrot.swift in Sources */,
-				A97644E4267C886B0063A384 /* Layout.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

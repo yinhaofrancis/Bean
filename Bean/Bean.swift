@@ -7,10 +7,7 @@
 
 import Foundation
 
-public class WeakBean<T:AnyObject>{
-    
-    weak var bean:T?
-}
+
 public class BeanContainer{
     private var lock:UnsafeMutablePointer<pthread_mutex_t> = UnsafeMutablePointer.allocate(capacity: 1)
     public static var shared:BeanContainer = BeanContainer()
@@ -38,19 +35,14 @@ public class Pods<T>{
     public var content:T?{
         didSet{
             for i in beans {
-                guard let ob = i.bean?.observer else { continue }
-                i.bean?.queue.async {
+                guard let ob = i.observer else { continue }
+                i.queue.async {
                     ob.change(from: oldValue, to: self.content)
                 }
             }
-            pthread_mutex_lock(self.lock)
-            self.beans = self.beans.filter { i in
-                i.bean != nil
-            }
-            pthread_mutex_unlock(self.lock)
         }
     }
-    public var beans:Array<WeakBean<Bean<T>>> = Array()
+    public var beans:Array<Bean<T>> = Array()
     public init() {
         pthread_mutex_init(self.lock, nil)
     }
@@ -90,9 +82,8 @@ public class Bean<T>{
     public init(name:String,queue:DispatchQueue = DispatchQueue.main) {
         self.name = name
         self.pods = BeanContainer.shared.query(name: self.name, type: T.self)
-        let wb = WeakBean<Bean<T>>()
+        let wb = Bean<T>(name: name)
         self.queue = queue
-        wb.bean = self
         self.pods.beans.append(wb)
     }
     public var projectedValue:BeanObserver<T>{

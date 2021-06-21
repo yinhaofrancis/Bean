@@ -83,7 +83,7 @@ public class SeedBuket{
             }
         }else if cls.type == .strong{
             if let obj = self.readStrong(name: name, type: type){
-                return obj as? T
+                return obj
             }else{
                 return self.createStrong(cls: cls, name: name)
             }
