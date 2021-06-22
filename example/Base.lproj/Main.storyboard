@@ -46,15 +46,29 @@
                                     <action selector="change:" destination="dTD-0b-3oZ" eventType="touchUpInside" id="aW1-n8-XYa"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="249" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x6w-8w-XwT">
+                                <rect key="frame" x="20" y="171" width="374" height="671"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="DD3-hU-Jhv"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="DD3-hU-Jhv" firstAttribute="bottom" secondItem="x6w-8w-XwT" secondAttribute="bottom" constant="20" id="4gb-6t-bWH"/>
                             <constraint firstItem="HRj-sw-BLU" firstAttribute="top" secondItem="DD3-hU-Jhv" secondAttribute="top" constant="45" id="Zmg-Jw-Ik8"/>
+                            <constraint firstItem="DD3-hU-Jhv" firstAttribute="trailing" secondItem="x6w-8w-XwT" secondAttribute="trailing" constant="20" id="mFq-z7-nN7"/>
+                            <constraint firstItem="x6w-8w-XwT" firstAttribute="top" secondItem="HRj-sw-BLU" secondAttribute="bottom" constant="8" symbolic="YES" id="mR9-14-4l6"/>
+                            <constraint firstItem="x6w-8w-XwT" firstAttribute="leading" secondItem="DD3-hU-Jhv" secondAttribute="leading" constant="20" id="tVM-LK-N6Z"/>
                             <constraint firstItem="HRj-sw-BLU" firstAttribute="centerX" secondItem="HxM-0T-6wO" secondAttribute="centerX" id="wCb-Io-Y4B"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="yUO-lo-2nt"/>
+                    <connections>
+                        <outlet property="btn" destination="HRj-sw-BLU" id="Pjh-4j-1JZ"/>
+                        <outlet property="text" destination="x6w-8w-XwT" id="cjZ-uK-6gE"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hBH-5c-0fy" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

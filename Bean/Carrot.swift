@@ -14,6 +14,11 @@ public enum SeedType{
     case normal
     
 }
+
+public protocol Context{
+    func of<T:Seed>(type:T.Type)->T?
+}
+
 public class WeakSeed<T:AnyObject>{
     
     weak var seed:T?
@@ -27,16 +32,16 @@ public protocol SeedContext{
 }
 public protocol Seed:AnyObject{
     
-    static var type:SeedType { get }
+    static func type()->SeedType
     
     static func create()->Seed
     
 }
 
 
-public class SeedBuket{
+public class SeedBucket:Context{
     
-    public static var shared:SeedBuket = SeedBuket()
+    public static var shared:SeedBucket = SeedBucket()
     
     public var seeds:[String:Seed.Type] = [:]
     
@@ -67,6 +72,10 @@ public class SeedBuket{
         self.rwlock.deallocate()
     }
     
+    public func of<T:Seed>(type: T.Type) -> T? {
+        self.create(name: "\(type)", type: type)
+    }
+    
     func create<T:Seed>(name:String,type:T.Type)->T?{
         if nil == self.seeds[name]{
             self.addSeed(type: type, name: name)
@@ -75,13 +84,13 @@ public class SeedBuket{
             return nil
         }
         
-        if cls.type == .singlton{
+        if cls.type() == .singlton{
             if let obj = self.readSiglton(name: name,type:type){
                 return obj
             }else{
                 return self.createSiglton(cls: cls, name: name)
             }
-        }else if cls.type == .strong{
+        }else if cls.type() == .strong{
             if let obj = self.readStrong(name: name, type: type){
                 return obj
             }else{
@@ -126,28 +135,30 @@ public class SeedBuket{
 @propertyWrapper
 public class Carrot<T:Seed>{
     
-    public var name:String
+    public private(set) var name:String
     
-    public var strongObject:T?
+    public private(set) var strongObject:T?
+    
+    public private(set) var bucket:SeedBucket
+    
     public var wrappedValue:T? {
         
-        if T.type == .strong{
+        if T.type() == .strong{
             if (self.strongObject != nil){
                 return self.strongObject
             }else{
-                self.strongObject = SeedBuket.shared.create(name: self.name,type: T.self);
+                self.strongObject = self.bucket.create(name: self.name,type: T.self);
                 return self.strongObject
             }
-            
         }else{
-            return SeedBuket.shared.create(name: self.name,type: T.self)
+            return self.bucket.create(name: self.name,type: T.self)
         }
-        
-        
     }
-    public init(name:String = "\(T.self)") {
-        
+    public init(name:String = "\(T.self)",bucket:SeedBucket = SeedBucket.shared) {
         self.name = name
-        
+        self.bucket = bucket
+    }
+    public var projectedValue:Carrot{
+        return self
     }
 }

@@ -12,42 +12,45 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-
     }
+    
     
 }
 class ViewController2: UIViewController {
 
+    @IBOutlet weak var text: UILabel!
     
-   
+    @IBOutlet weak var btn: UIButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-      
+        self.text.text = self.state?.mm
+        self.state?.$mm.observer = BeanObserver(handle: { [weak self] v in
+            self?.text.text = v
+        })
     }
 
     @IBAction func change(_ sender: Any) {
      
     }
-    
+
+    @Carrot
+    var state:AppState?
+
 }
 
-public struct test:Segment{
-    public typealias Body = <#type#>
+class AppState:Seed {
+    static func type() -> SeedType {
+        .strong
+    }
     
-
-    public typealias Body = Container
+    static func create() -> Seed {
+        AppState()
+    }
     
-    var text1:String
-    var text2:String
-    public lazy var body:Body = {
-        Container(frame: CGRect(x: 0, y: 0, width: 100, height: 100), children: [
-            Text(text: self.text1 , font: .systemFont(ofSize: 10), color: UIColor.red, frame: CGRect(x: 0, y: 0, width: 20, height: 20)),
-            Container(frame: CGRect(x: 0, y: 100, width: 100, height: 100), children: [
-                Text(text: self.text1 , font: .systemFont(ofSize: 10), color: UIColor.red, frame: CGRect(x: 0, y: 0, width: 20, height: 20)),
-                Text(text: self.text1 , font: .systemFont(ofSize: 10), color: UIColor.red, frame: CGRect(x: 0, y: 20, width: 20, height: 20)),
-            ])
-        ])
-    }()
-
+    @Request<String,String,String,String,BeanObserver<String>>(url: "https://www.baidu.com")
+    var str:String?
+    
+    @Get<String,String,BeanObserver<String>>(url: "https://www.baidu.com")
+    var mm:String?
 }

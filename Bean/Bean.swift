@@ -6,90 +6,313 @@
 //
 
 import Foundation
+import UIKit
 
-
-public class BeanContainer{
-    private var lock:UnsafeMutablePointer<pthread_mutex_t> = UnsafeMutablePointer.allocate(capacity: 1)
-    public static var shared:BeanContainer = BeanContainer()
-    public func query<T>(name:String,type:T.Type)->Pods<T>{
-        pthread_mutex_lock(self.lock)
-        let name = name
-        var pod = self.dictionary[name] as? Pods<T>
-        if(pod == nil){
-            pod = Pods<T>()
-            self.dictionary[name] = pod
-        }
-        pthread_mutex_unlock(self.lock)
-        return pod!
+public class HeaderState:Seed{
+    public static func type() -> SeedType {
+        .strong
     }
-    init() {
-        pthread_mutex_init(self.lock, nil)
+    
+    public static func create() -> Seed {
+        HeaderState()
     }
-    deinit {
-        pthread_mutex_destroy(self.lock)
-    }
-    public var dictionary:[String:Any] = [:]
+    
+    public var state:[String:String] = [:]
 }
-public class Pods<T>{
-    private var lock:UnsafeMutablePointer<pthread_mutex_t> = UnsafeMutablePointer.allocate(capacity: 1)
-    public var content:T?{
+
+
+public protocol Transform{
+
+    associatedtype Content
+    
+    static func encode(target:Content)->Data?
+    
+    static func decode(data:Data)->Content?
+    
+}
+
+public class JsonTransform<T:Codable>:Transform{
+    public typealias Content = T
+    
+    public static func encode(target: T) -> Data? {
+        return try? JSONEncoder().encode(target)
+    }
+    public static func decode(data: Data) -> T? {
+        try? JSONDecoder().decode(T.self, from: data)
+    }
+}
+
+public class ImageTransform:Transform{
+    public static func encode(target: UIImage) -> Data? {
+        target.jpegData(compressionQuality: 1)
+    }
+    
+    public static func decode(data: Data) -> UIImage? {
+        UIImage(data: data)
+    }
+    
+    
+    public typealias Content = UIImage
+    
+}
+
+
+extension String:Transform{
+    public static func encode(target: String) -> Data? {
+        target.data(using: .utf8)
+    }
+    
+    public static func decode(data: Data) -> String? {
+        String(data: data, encoding: .utf8)
+    }
+    
+    public typealias Content = String
+    
+}
+extension UIImage:Transform{
+    public static func encode(target: UIImage) -> Data? {
+        target.jpegData(compressionQuality: 1)
+    }
+    
+    public static func decode(data: Data) -> UIImage? {
+        UIImage(data: data)
+    }
+    
+    public typealias Content = UIImage
+    
+    
+}
+
+
+
+public protocol Observer{
+    
+    associatedtype Value
+    func handleValue(v:Value?)
+}
+
+
+public class BeanObserver<T>:Observer{
+    public func handleValue(v: T?) {
+        self.handle(v)
+    }
+    public init(handle:@escaping (T?)->Void){
+        self.handle = handle
+    }
+    public var handle:(T?)->Void
+    public typealias Value = T
+        
+}
+
+public class Pod<Content,
+                 ContentTransform:Transform,
+                 PostContent,
+                 PostTransform:Transform,
+                 Ob:Observer>:Seed  where Ob.Value == Content,
+                                          ContentTransform.Content == Content,
+                                          PostTransform.Content == PostContent{
+    
+    public static func type() -> SeedType {
+        return .strong
+    }
+        
+    public static func create() -> Seed {
+        Pod()
+    }
+    
+    var urls:[WeakSeed<Request<Content,ContentTransform,PostContent,PostTransform,Ob>>] = []
+    
+    var content:Content?{
         didSet{
-            for i in beans {
-                guard let ob = i.observer else { continue }
-                i.queue.async {
-                    ob.change(from: oldValue, to: self.content)
-                }
+            self.urls.forEach { i in
+                i.seed?.observer?.handleValue(v: content)
             }
         }
     }
-    public var beans:Array<Bean<T>> = Array()
-    public init() {
-        pthread_mutex_init(self.lock, nil)
-    }
-    deinit {
-        pthread_mutex_destroy(self.lock)
-    }
 }
-public class BeanObserver<T>{
 
-    public typealias Callback = (T?,T?)->Void
-    public func setChange(call:@escaping Callback){
-        self.call = call
+extension URLSession:Seed{
+    public static func type() -> SeedType {
+        .singlton
     }
-    public var call:Callback?
-    public func change(from:T?,to:T?)->Void{
-        self.call?(from,to)
-    }
-    public init(callback:Callback? = nil) {
-        self.call = callback;
+    
+    public static func create() -> Seed {
+        URLSession(configuration: .default)
     }
 }
 
 @propertyWrapper
-public class Bean<T>{
-    public private(set) var name:String
-    public var wrappedValue:T? {
+public class Request<Content,
+                     ContentTransform:Transform,
+                     PostContent,
+                     PostTransform:Transform,
+                     Ob:Observer> where Ob.Value == Content,
+                                        ContentTransform.Content == Content,
+                                        PostTransform.Content == PostContent{
+    
+    public var url:URL
+    
+    public var method:String
+    
+    @Carrot
+    var pod:Pod<Content,ContentTransform,PostContent,PostTransform,Ob>?
+    
+    @Carrot
+    var session:URLSession?
+    
+    @Carrot
+    var header:HeaderState?
+    
+    public var observer:Ob?
+    
+    public var queue:DispatchQueue?
+    
+    public var wrappedValue:Content?{
         get{
-            return pods.content
+            if self.pod?.content == nil{
+                self.request()
+            }
+            return self.pod?.content
+        }
+        set{
+            self.pod?.content = newValue
         }
     }
-    public func setState(state:T?){
-        self.pods.content = state
+    public func request(body:PostContent? = nil){
+        var req = URLRequest(url: self.url)
+        req.httpMethod = self.method
+        if let b = body{
+            req.httpBody = PostTransform.encode(target: b)
+        }
+        if let header = self.header{
+            req.allHTTPHeaderFields = header.state
+        }
+        self.session?.dataTask(with: req, completionHandler: { data, resp, e in
+            let q = self.queue ?? DispatchQueue.main
+            q.async {
+                guard let dat = data else { return }
+                self.wrappedValue = ContentTransform.decode(data: dat)
+            }
+        }).resume()
     }
-    public var pods:Pods<T>
-    var queue:DispatchQueue
-    public var observer:BeanObserver<T>?
-    public init(name:String,queue:DispatchQueue = DispatchQueue.main) {
-        self.name = name
-        self.pods = BeanContainer.shared.query(name: self.name, type: T.self)
-        let wb = Bean<T>(name: name)
+    
+    
+    
+    public init(url:String,method:String = "get",queue:DispatchQueue? = nil) {
+        
+        self.url = URL(string: url)!
+        
+        self.method = method
+        
         self.queue = queue
-        self.pods.beans.append(wb)
-    }
-    public var projectedValue:BeanObserver<T>{
-        if self.observer == nil{
-            self.observer = BeanObserver()
+        
+        if(wrappedValue != nil){
+            self.wrappedValue = wrappedValue
         }
-        return self.observer!
+        self.pod?.urls.append(WeakSeed(seed: self))
+        
     }
+    public var projectedValue:Request{
+        return self
+    }
+}
+
+@propertyWrapper
+public class Get<Content,ContentTransform:Transform,O:Observer>:Request<Content,ContentTransform,String,String,O> where ContentTransform.Content == Content , O.Value == Content{
+
+    public override var wrappedValue:Content?{
+        get{
+            super.wrappedValue
+        }
+        set{
+            super.wrappedValue = newValue
+        }
+    }
+    
+    public init(url:String,queue:DispatchQueue? = nil){
+        super.init(url: url, method: "get", queue: queue)
+    }
+    public override var projectedValue:Get{
+        return self
+    }
+}
+
+
+@propertyWrapper
+public class Json<Content:Codable,Body:Codable,O:Observer>:Request<Content,JsonTransform<Content>,Body,JsonTransform<Body>,O> where O.Value == Content{
+
+    public override var wrappedValue:Content?{
+        get{
+            super.wrappedValue
+        }
+        set{
+            super.wrappedValue = newValue
+        }
+    }
+    
+    public override init(url:String,method:String = "get",queue:DispatchQueue? = nil){
+        super.init(url: url, method: method, queue: queue)
+    }
+    public override var projectedValue:Json{
+        return self
+    }
+}
+
+@propertyWrapper
+public class GetJson<Content:Codable,O:Observer>:Request<Content,JsonTransform<Content>,String,String,O> where O.Value == Content{
+
+    public override var wrappedValue:Content?{
+        get{
+            super.wrappedValue
+        }
+        set{
+            super.wrappedValue = newValue
+        }
+    }
+    
+    public init(url:String,queue:DispatchQueue? = nil){
+        super.init(url: url, method: "get", queue: queue)
+    }
+    public override var projectedValue:GetJson{
+        return self
+    }
+}
+@propertyWrapper
+public class PostJson<Content:Codable,Body:Codable,O:Observer>:Request<Content,JsonTransform<Content>,Body,JsonTransform<Body>,O> where O.Value == Content{
+
+    public override var wrappedValue:Content?{
+        get{
+            super.wrappedValue
+        }
+        set{
+            super.wrappedValue = newValue
+        }
+    }
+    
+    public init(url:String,queue:DispatchQueue? = nil){
+        super.init(url: url, method: "post", queue: queue)
+    }
+    public override var projectedValue:PostJson{
+        return self
+    }
+}
+@propertyWrapper
+public class Image<O:Observer>:Request<UIImage,ImageTransform,String,String,O> where O.Value == UIImage{
+
+    public override var wrappedValue:UIImage?{
+        get{
+            super.wrappedValue
+        }
+        set{
+            super.wrappedValue = newValue
+        }
+    }
+    
+    public override init(url:String,method:String = "get",queue:DispatchQueue? = nil){
+        super.init(url: url, method: method, queue: queue)
+    }
+    public override var projectedValue:Image{
+        return self
+    }
+    
 }
