@@ -77,13 +77,19 @@ public class SeedBucket:Context{
     }
     
     func create<T:Seed>(name:String,type:T.Type)->T?{
+        pthread_rwlock_rdlock(self.rwlock)
         if nil == self.seeds[name]{
+            pthread_rwlock_unlock(self.rwlock)
             self.addSeed(type: type, name: name)
+        }else{
+            pthread_rwlock_unlock(self.rwlock)
         }
+        pthread_rwlock_rdlock(self.rwlock)
         guard let cls = self.seeds[name] as? T.Type else {
+            pthread_rwlock_unlock(self.rwlock)
             return nil
         }
-        
+        pthread_rwlock_unlock(self.rwlock)
         if cls.type() == .singlton{
             if let obj = self.readSiglton(name: name,type:type){
                 return obj
@@ -162,3 +168,67 @@ public class Carrot<T:Seed>{
         return self
     }
 }
+
+
+public protocol Observer:AnyObject,Hashable{
+    associatedtype State
+    func onChange(state:State)
+}
+public class StateObserver<T>:Observer {
+    public static func == (lhs: StateObserver<T>, rhs: StateObserver<T>) -> Bool {
+        return lhs.hashValue == rhs.hashValue
+    }
+    
+    public typealias State = T
+    private var callback:(T)->Void
+    public func onChange(state: T) {
+        self.callback(state)
+    }
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(self.id)
+    }
+    public init(callback:@escaping (T)->Void){
+        self.callback = callback
+    }
+    private var id:String = UUID().uuidString
+    
+}
+
+@propertyWrapper
+public class State<O:Observer,T> where O.State == T{
+    public var wrappedValue:T{
+        didSet{
+            for i in self.set{
+                i.onChange(state: wrappedValue)
+            }
+        }
+    }
+    public init(wrappedValue:T,type:O.Type = StateObserver<T>.self) where O == StateObserver<T>{
+        self.wrappedValue = wrappedValue
+        self.set = []
+        pthread_mutex_init(self.lock, nil)
+    }
+    
+    public var set:Array<O>
+    
+    private var lock:UnsafeMutablePointer<pthread_mutex_t> = .allocate(capacity: 1)
+    
+    public func addObserver(observer:O){
+        pthread_mutex_lock(self.lock)
+        self.set.append(observer)
+        pthread_mutex_unlock(self.lock)
+    }
+    public func removeObserver(observer:O){
+        pthread_mutex_lock(self.lock)
+        self.set.append(observer)
+        pthread_mutex_unlock(self.lock)
+    }
+    public var projectedValue:State{
+        return self
+    }
+    deinit {
+        pthread_mutex_destroy(self.lock)
+        self.lock.deallocate()
+    }
+}
+

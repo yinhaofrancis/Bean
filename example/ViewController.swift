@@ -23,15 +23,25 @@ class ViewController2: UIViewController {
     @IBOutlet weak var btn: UIButton!
     
     override func viewDidLoad() {
+        
+        
+        
         super.viewDidLoad()
-        self.text.text = self.state?.mm
-        self.state?.$mm.observer = BeanObserver(handle: { [weak self] v in
-            self?.text.text = v
-        })
+        self.state?.$name.addObserver(observer: StateObserver(callback: { v in
+            print(v)
+        }))
+        self.state?.$name.addObserver(observer: StateObserver(callback: { b in
+            print(b)
+        }))
     }
 
     @IBAction func change(_ sender: Any) {
      
+        self.state?.name = "\(arc4random())"
+        var t = "htp:\\{duir}\\asdsad\\{dashdj}"
+        print(t)
+        let a = UrlTemplete(stringLiteral: t).reg.matches(in: t, options: .reportCompletion, range: NSRange(location: 0, length: t.count))
+        print(a)
     }
 
     @Carrot
@@ -48,9 +58,9 @@ class AppState:Seed {
         AppState()
     }
     
-    @Request<String,String,String,String,BeanObserver<String>>(url: "https://www.baidu.com")
-    var str:String?
+    @State
+    var name:String = ""
     
-    @Get<String,String,BeanObserver<String>>(url: "https://www.baidu.com")
-    var mm:String?
+    @State(type:StateObserver.self)
+    var k:Date = Date()
 }
