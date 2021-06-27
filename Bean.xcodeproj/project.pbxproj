@@ -20,6 +20,8 @@
 		A97268D9267361CD001506F4 /* Carrot.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97268D8267361CD001506F4 /* Carrot.swift */; };
 		A97644E2267C353A0063A384 /* Constaint.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97644E1267C353A0063A384 /* Constaint.swift */; };
 		A97644E6267C9D120063A384 /* View.xib in Resources */ = {isa = PBXBuildFile; fileRef = A97644E5267C9D120063A384 /* View.xib */; };
+		A996312C26884F6B004504B0 /* textView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A996312B26884F6B004504B0 /* textView.swift */; };
+		A996313026886E8A004504B0 /* textViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A996312F26886E8A004504B0 /* textViewController.swift */; };
 		A9D4DC062671A45100C0E846 /* Bean.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9D4DBFC2671A45100C0E846 /* Bean.framework */; };
 		A9D4DC0B2671A45100C0E846 /* BeanTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D4DC0A2671A45100C0E846 /* BeanTests.swift */; };
 		A9D4DC202671A91E00C0E846 /* bean.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = A9D4DC1F2671A91E00C0E846 /* bean.xcconfig */; };
@@ -71,6 +73,8 @@
 		A97644E1267C353A0063A384 /* Constaint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constaint.swift; sourceTree = "<group>"; };
 		A97644E3267C886B0063A384 /* Layout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Layout.swift; sourceTree = "<group>"; };
 		A97644E5267C9D120063A384 /* View.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = View.xib; sourceTree = "<group>"; };
+		A996312B26884F6B004504B0 /* textView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = textView.swift; sourceTree = "<group>"; };
+		A996312F26886E8A004504B0 /* textViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = textViewController.swift; sourceTree = "<group>"; };
 		A9D4DBFC2671A45100C0E846 /* Bean.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Bean.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9D4DC002671A45100C0E846 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A9D4DC052671A45100C0E846 /* BeanTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BeanTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -118,6 +122,8 @@
 				A97268CA26732270001506F4 /* LaunchScreen.storyboard */,
 				A97268CD26732270001506F4 /* Info.plist */,
 				A97644E5267C9D120063A384 /* View.xib */,
+				A996312B26884F6B004504B0 /* textView.swift */,
+				A996312F26886E8A004504B0 /* textViewController.swift */,
 			);
 			path = example;
 			sourceTree = "<group>";
@@ -327,6 +333,8 @@
 			files = (
 				A97268C42673226B001506F4 /* ViewController.swift in Sources */,
 				A97268C02673226B001506F4 /* AppDelegate.swift in Sources */,
+				A996312C26884F6B004504B0 /* textView.swift in Sources */,
+				A996313026886E8A004504B0 /* textViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -92,15 +92,30 @@
             </objects>
             <point key="canvasLocation" x="-552" y="-23"/>
         </scene>
-        <!--View Controller-->
+        <!--Text View Controller-->
         <scene sceneID="WMr-8m-l9F">
             <objects>
-                <viewController id="sHt-cQ-aEc" sceneMemberID="viewController">
+                <viewController id="sHt-cQ-aEc" customClass="textViewController" customModule="example" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="vOE-it-jsb">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="fnU-nV-UWQ" customClass="textView" customModule="example" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="88" width="414" height="774"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <color key="textColor" systemColor="labelColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="Onr-go-n3u"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="Onr-go-n3u" firstAttribute="trailing" secondItem="fnU-nV-UWQ" secondAttribute="trailing" id="4iZ-oh-Jx9"/>
+                            <constraint firstItem="fnU-nV-UWQ" firstAttribute="leading" secondItem="Onr-go-n3u" secondAttribute="leading" id="8FZ-n6-Xl9"/>
+                            <constraint firstItem="Onr-go-n3u" firstAttribute="bottom" secondItem="fnU-nV-UWQ" secondAttribute="bottom" id="k54-oa-s8O"/>
+                            <constraint firstItem="fnU-nV-UWQ" firstAttribute="top" secondItem="Onr-go-n3u" secondAttribute="top" id="xh9-Cd-gfC"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="Bh8-fR-iSP">
                         <barButtonItem key="rightBarButtonItem" title="Item" id="Kw8-UJ-gUF">
@@ -109,6 +124,9 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="textView" destination="fnU-nV-UWQ" id="yH5-YO-ggY"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="52y-6Q-wWi" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -116,6 +134,9 @@
         </scene>
     </scenes>
     <resources>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
