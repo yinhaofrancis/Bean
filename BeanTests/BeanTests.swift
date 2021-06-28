@@ -2,7 +2,7 @@
 //  BeanTests.swift
 //  BeanTests
 //
-//  Created by hao yin on 2021/6/10.
+//  Created by WY on 2021/6/10.
 //
 
 import XCTest

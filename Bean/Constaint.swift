@@ -2,7 +2,7 @@
 ////  Observer.swift
 ////  Bean
 ////
-////  Created by hao yin on 2021/6/18.
+////  Created by WY on 2021/6/18.
 ////
 //
 import Foundation

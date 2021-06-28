@@ -2,7 +2,7 @@
 //  Leaf.swift
 //  Bean
 //
-//  Created by hao yin on 2021/6/23.
+//  Created by WY on 2021/6/23.
 //
 
 import Foundation
@@ -159,6 +159,23 @@ public class Get<T>:Request<T>{
         }
     }
     public override var projectedValue:Get{
+        return self
+    }
+}
+@propertyWrapper
+public class Post<T>:Request<T>{
+    public init(url:UrlTemplete) where T:Codable{
+        super.init(url:url,method:"post")
+    }
+    public override var wrappedValue:T?{
+        get{
+            super.wrappedValue
+        }
+        set{
+            super.wrappedValue = newValue
+        }
+    }
+    public override var projectedValue:Post{
         return self
     }
 }
