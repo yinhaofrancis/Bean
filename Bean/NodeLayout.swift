@@ -37,7 +37,7 @@ public struct ElementDual{
 
 public protocol LayoutStyle{
     
-    func layout(elements:Set<LayoutElement>,parentRect:CGRect)
+    func layout(elements:Array<LayoutElement>,parentRect:CGRect)
 
     init()
 }
@@ -59,7 +59,7 @@ public protocol AbsoluteLayoutElement:DisplayElement{
 }
 
 public class  AbsoluteLayoutStyle:LayoutStyle{
-    public func layout(elements: Set<LayoutElement>, parentRect: CGRect) {
+    public func layout(elements: Array<LayoutElement>, parentRect: CGRect) {
         for i in elements {
             let x = i.postion.x.value(parent: parentRect.width)
             let y = i.postion.y.value(parent: parentRect.height)
@@ -74,7 +74,7 @@ public class  AbsoluteLayoutStyle:LayoutStyle{
 }
 
 public class  RelateLayoutStyle:LayoutStyle{
-    public func layout(elements: Set<LayoutElement>, parentRect: CGRect) {
+    public func layout(elements: Array<LayoutElement>, parentRect: CGRect) {
         for i in elements {
             let x = i.postion.x.value(parent: parentRect.width)
             let y = i.postion.y.value(parent: parentRect.height)
@@ -107,8 +107,7 @@ public class LayoutElement:AbsoluteLayoutElement,Hashable{
         }
         
     }
-    
-    public private(set) var elements:Set<LayoutElement> = Set()
+    public private(set) var elements:Array<LayoutElement> = Array()
     
     public static func == (lhs: LayoutElement, rhs: LayoutElement) -> Bool {
         Unmanaged.passUnretained(lhs).toOpaque() == Unmanaged.passUnretained(rhs).toOpaque()
@@ -124,25 +123,49 @@ public class LayoutElement:AbsoluteLayoutElement,Hashable{
     
     
     func addLayoutElement(element:LayoutElement){
-        self.elements.insert(element)
+        self.elements.append(element)
         element.parentElement = self
 
         self.layout()
     }
     func insert(element:LayoutElement,below:LayoutElement){
 
-        self.addLayoutElement(element: element)
+        
+        guard let index = self.index(element: below) else { return }
+        self.elements.insert(element, at: index)
+        element.parentElement = self
+        self.layout()
         
     }
     func insert(element:LayoutElement,above:LayoutElement){
-        self.addLayoutElement(element: element)
+        guard let index = self.index(element: above) else { return }
+        if(index == self.elements.count - 1){
+            self .addLayoutElement(element: element)
+        }else{
+            self.elements.insert(element, at: index + 1)
+            element.parentElement = self
+            self.layout()
+        }
     }
     public func insert(element:LayoutElement,index:Int){
-        self.addLayoutElement(element: element)
+        self.elements.insert(element, at: index)
+        element.parentElement = self
+
+        self.layout()
+        
     }
+    
     func removeFromSuperElement(){
-        self.elements.remove(self)
+        guard let index = self.parentElement?.index(element: self) else { return }
+    
+        self.parentElement?.elements.remove(at: index)
         self.parentElement?.layout()
+    }
+    func index(element:LayoutElement)->Array<LayoutElement>.Index?{
+        let item = self.elements.firstIndex { e in
+            e == self
+        }
+        return item
     }
     public func layout(){
         self.layoutStyle.layout(elements: self.elements, parentRect: self.frame)
