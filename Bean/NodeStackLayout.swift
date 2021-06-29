@@ -90,7 +90,7 @@ public class StackLayoutStyle:LayoutStyle{
             break
         case .evenly:
             xStart = noUseSpace / CGFloat(line.array.count + 1)
-            xStep = xStart * 2
+            xStep = xStart
         }
         for i in 0 ..< line.array.count {
             let item = line.array[i]

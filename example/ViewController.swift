@@ -37,12 +37,14 @@ class ViewController2: UIViewController {
             let node = Node<UIView, StackLayoutStyle>(view: UIView())
             node.view.view?.backgroundColor = UIColor.red
             node.crossAlign = .stretch
+            node.axisAlign = .evenly
             node.size = ElementDual(x: .percent(0.8), y: .percent(0.8))
             node.postion = ElementDual(x: .percent(0.1), y: .percent(0.1))
             n.addNode(node: node)
             let node2 = Node<UIView, AbsoluteLayoutStyle>(view: UIView())
             node2.view.view?.backgroundColor = UIColor.yellow
             node2.basis = .pt(20)
+            node2.crossBasis = .pt(30)
             node.addNode(node: node2)
             
             
@@ -50,6 +52,7 @@ class ViewController2: UIViewController {
             let node3 = Node<UIView, AbsoluteLayoutStyle>(view: UIView())
             node3.view.view?.backgroundColor = UIColor.green
             node3.basis = .pt(20)
+            node3.crossBasis = .pt(40)
             node.addNode(node: node3)
         }
         self.showDetailViewController(v, sender: nil)
