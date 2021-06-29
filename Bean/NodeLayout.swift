@@ -9,15 +9,24 @@ import UIKit
 public enum ElementDimension{
     case pt(CGFloat)
     case percent(CGFloat)
-    
+    case unset
     public static var zero = ElementDimension.pt(0)
-    
+    public var issUnset:Bool{
+        switch self {
+        case .unset:
+            return true
+        default:
+            return false
+        }
+    }
     public func value(parent:CGFloat)->CGFloat{
         switch self {
         case let .percent(w):
             return w * parent
         case let .pt(w):
             return w
+        case .unset:
+            return 0
         }
     }
 }
@@ -37,7 +46,8 @@ public struct ElementDual{
 
 public protocol LayoutStyle{
     
-    func layout(elements:Array<LayoutElement>,parentRect:CGRect)
+    
+    func layout(elements: Array<LayoutElement>, parentElement:LayoutElement)
 
     init()
 }
@@ -51,6 +61,8 @@ public protocol LayoutContainer{
 
 public protocol DisplayElement:AnyObject {
     func loadFrame(rect:CGRect)
+    var contentWidth:ElementDimension { get }
+    var contentHeight:ElementDimension { get }
 }
 // absolute
 public protocol AbsoluteLayoutElement:DisplayElement{
@@ -58,23 +70,11 @@ public protocol AbsoluteLayoutElement:DisplayElement{
     var postion:ElementDual { get }
 }
 
+
+
 public class  AbsoluteLayoutStyle:LayoutStyle{
-    public func layout(elements: Array<LayoutElement>, parentRect: CGRect) {
-        for i in elements {
-            let x = i.postion.x.value(parent: parentRect.width)
-            let y = i.postion.y.value(parent: parentRect.height)
-            let w = i.size.x.value(parent: parentRect.width)
-            let h = i.size.y.value(parent: parentRect.height)
-            i.loadFrame(rect: CGRect(x: x, y: y, width: w, height: h))
-        }
-    }
-    required public init() {
-        
-    }
-}
-
-public class  RelateLayoutStyle:LayoutStyle{
-    public func layout(elements: Array<LayoutElement>, parentRect: CGRect) {
+    public func layout(elements: Array<LayoutElement>, parentElement:LayoutElement) {
+        let parentRect = parentElement.frame
         for i in elements {
             let x = i.postion.x.value(parent: parentRect.width)
             let y = i.postion.y.value(parent: parentRect.height)
@@ -90,7 +90,38 @@ public class  RelateLayoutStyle:LayoutStyle{
 
 
 
-public class LayoutElement:AbsoluteLayoutElement,Hashable{
+
+
+
+public class LayoutElement:AbsoluteLayoutElement,StackLayoutElement,Hashable{
+    
+    public var axis: Axis = .horizontal
+    
+    public var contentWidth: ElementDimension {
+        return .unset
+    }
+    
+    public var contentHeight: ElementDimension{
+        return .unset
+    }
+
+    public var basis: ElementDimension = .unset
+    
+    public var crossBasis: ElementDimension  = .unset
+    
+    public var crossAlign: CrossAlign = .start
+    
+    public var axisAlign: AxisAlign = .start
+    
+    public var crossContentAlign: AxisAlign? = nil
+    
+    public var alignSelf: CrossAlign?
+    
+    public var grow: CGFloat = 1
+    
+    public var shrink: CGFloat = 0
+    
+    public var wrap: Bool = true
         
     public var size: ElementDual = .zero
     
@@ -100,27 +131,44 @@ public class LayoutElement:AbsoluteLayoutElement,Hashable{
     
     public var layoutStyle: LayoutStyle = AbsoluteLayoutStyle()
     
+    public var axisSizeDimension:ElementDimension{
+        let ax = self.parentElement?.axis ?? .horizontal
+        switch self.basis {
+        case .unset:
+            return ax != .horizontal ? self.contentHeight : self.contentWidth
+        default:
+            return self.basis
+        }
+    }
+    
+    public var crossSizeDimension:ElementDimension{
+        let ax = self.parentElement?.axis ?? .horizontal
+        switch self.basis {
+        case .unset:
+            return ax == .horizontal ? self.contentHeight : self.contentWidth
+        default:
+            return self.crossBasis
+        }
+    }
+    
     public func loadFrame(rect: CGRect) {
         if(self.frame != rect){
             self.frame = rect
             self.layout()
         }
-        
     }
+    
     public private(set) var elements:Array<LayoutElement> = Array()
     
     public static func == (lhs: LayoutElement, rhs: LayoutElement) -> Bool {
         Unmanaged.passUnretained(lhs).toOpaque() == Unmanaged.passUnretained(rhs).toOpaque()
     }
+    
     public func hash(into hasher: inout Hasher) {
         hasher.combine(Unmanaged.passUnretained(self).toOpaque())
     }
     
-    
     public var parentElement:LayoutElement?
-    
-    
-    
     
     func addLayoutElement(element:LayoutElement){
         self.elements.append(element)
@@ -128,6 +176,7 @@ public class LayoutElement:AbsoluteLayoutElement,Hashable{
 
         self.layout()
     }
+    
     func insert(element:LayoutElement,below:LayoutElement){
 
         
@@ -168,6 +217,6 @@ public class LayoutElement:AbsoluteLayoutElement,Hashable{
         return item
     }
     public func layout(){
-        self.layoutStyle.layout(elements: self.elements, parentRect: self.frame)
+        self.layoutStyle.layout(elements: self.elements, parentElement: self)
     }
 }

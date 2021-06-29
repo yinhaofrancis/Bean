@@ -27,9 +27,6 @@ class ViewController2: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.state?.$nae.addObserver(observer: { n, old in
-            print(n)
-        })
     }
 
     @IBAction func change(_ sender: Any) {
@@ -37,18 +34,25 @@ class ViewController2: UIViewController {
         let v = NodeViewController<UIView,AbsoluteLayoutStyle>()
         v.nodeDidLoad { n in
             n.view.backgroundColor = UIColor.white
-            let node = Node<UIView, AbsoluteLayoutStyle>(view: UIView())
+            let node = Node<UIView, StackLayoutStyle>(view: UIView())
             node.view.view?.backgroundColor = UIColor.red
-            node.size = ElementDual(x: .percent(0.5), y: .percent(0.5))
-            node.postion = ElementDual(x: .pt(10), y: .pt(100))
+            node.crossAlign = .stretch
+            node.size = ElementDual(x: .percent(0.8), y: .percent(0.8))
+            node.postion = ElementDual(x: .percent(0.1), y: .percent(0.1))
             n.addNode(node: node)
             let node2 = Node<UIView, AbsoluteLayoutStyle>(view: UIView())
             node2.view.view?.backgroundColor = UIColor.yellow
-            node2.size = ElementDual(x: .percent(0.3), y: .percent(0.9))
-            node2.postion = ElementDual(x: .percent(0.7), y: .percent(0.1))
+            node2.basis = .pt(20)
             node.addNode(node: node2)
+            
+            
+            
+            let node3 = Node<UIView, AbsoluteLayoutStyle>(view: UIView())
+            node3.view.view?.backgroundColor = UIColor.green
+            node3.basis = .pt(20)
+            node.addNode(node: node3)
         }
-        self.show(v, sender: nil)
+        self.showDetailViewController(v, sender: nil)
     }
 
     @Carrot

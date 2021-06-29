@@ -41,12 +41,29 @@ public class Node<View:DisplayWrap,Style:LayoutStyle>:LayoutElement{
             self.view.layer.frame = frame
         }
     }
-    
+    public override var contentWidth: ElementDimension{
+        self.view.view?.sizeToFit()
+        if self.view.isRespond{
+            let s = self.view.view?.frame.width ?? 0
+            return s == 0 ? .unset : .pt(s)
+        }else{
+            return .unset
+        }
+    }
+    public override var contentHeight: ElementDimension{
+        self.view.view?.sizeToFit()
+        if self.view.isRespond{
+            let s = self.view.view?.frame.height ?? 0
+            return s == 0 ? .unset : .pt(s)
+        }else{
+            return .unset
+        }
+    }
     public init(view:View){
         self.view = view
-    }
-    
-    
+        super.init()
+        self.layoutStyle = Style()
+    }    
     public func addNode<V:DisplayWrap,S:LayoutStyle>(node:Node<V,S>){
         if self.view.isRespond && node.view.isRespond{
             self.view.view?.addSubview(node.view.view!)
