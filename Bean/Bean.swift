@@ -2,7 +2,7 @@
 //  Bean.swift
 //  Bean
 //
-//  Created by hao yin on 2021/6/9.
+//  Created by WY on 2021/6/9.
 //
 
 import Foundation

@@ -7,7 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A92F652F2681873A00318039 /* Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97644E3267C886B0063A384 /* Layout.swift */; };
+		A91D46BB2689AAAF0072BEF3 /* NodeLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91D46BA2689AAAF0072BEF3 /* NodeLayout.swift */; };
+		A92F652F2681873A00318039 /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97644E3267C886B0063A384 /* Node.swift */; };
 		A92F65322681BD1900318039 /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F65312681BD1900318039 /* Storage.swift */; };
 		A933164B26832CDF00AD3303 /* Leaf.swift in Sources */ = {isa = PBXBuildFile; fileRef = A933164A26832CDF00AD3303 /* Leaf.swift */; };
 		A97268C02673226B001506F4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97268BF2673226B001506F4 /* AppDelegate.swift */; };
@@ -35,6 +36,13 @@
 			remoteGlobalIDString = A9D4DBFB2671A45100C0E846;
 			remoteInfo = Bean;
 		};
+		A982A66D26841A3A009F92B5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A9D4DBF32671A45100C0E846 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A97268BC2673226B001506F4;
+			remoteInfo = example;
+		};
 		A9D4DC072671A45100C0E846 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = A9D4DBF32671A45100C0E846 /* Project object */;
@@ -59,6 +67,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		A91D46BA2689AAAF0072BEF3 /* NodeLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NodeLayout.swift; sourceTree = "<group>"; };
 		A92F65312681BD1900318039 /* Storage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storage.swift; sourceTree = "<group>"; };
 		A933164A26832CDF00AD3303 /* Leaf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Leaf.swift; sourceTree = "<group>"; };
 		A97268BD2673226B001506F4 /* example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = example.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -71,7 +80,7 @@
 		A97268D12673229B001506F4 /* example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = example.entitlements; sourceTree = "<group>"; };
 		A97268D8267361CD001506F4 /* Carrot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Carrot.swift; sourceTree = "<group>"; };
 		A97644E1267C353A0063A384 /* Constaint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constaint.swift; sourceTree = "<group>"; };
-		A97644E3267C886B0063A384 /* Layout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Layout.swift; sourceTree = "<group>"; };
+		A97644E3267C886B0063A384 /* Node.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Node.swift; sourceTree = "<group>"; };
 		A97644E5267C9D120063A384 /* View.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = View.xib; sourceTree = "<group>"; };
 		A996312B26884F6B004504B0 /* textView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = textView.swift; sourceTree = "<group>"; };
 		A996312F26886E8A004504B0 /* textViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = textViewController.swift; sourceTree = "<group>"; };
@@ -164,7 +173,8 @@
 				A9D4DC1C2671A90800C0E846 /* Bean.swift */,
 				A92F65312681BD1900318039 /* Storage.swift */,
 				A97644E1267C353A0063A384 /* Constaint.swift */,
-				A97644E3267C886B0063A384 /* Layout.swift */,
+				A97644E3267C886B0063A384 /* Node.swift */,
+				A91D46BA2689AAAF0072BEF3 /* NodeLayout.swift */,
 				A97268D8267361CD001506F4 /* Carrot.swift */,
 				A933164A26832CDF00AD3303 /* Leaf.swift */,
 			);
@@ -250,6 +260,7 @@
 			);
 			dependencies = (
 				A9D4DC082671A45100C0E846 /* PBXTargetDependency */,
+				A982A66E26841A3A009F92B5 /* PBXTargetDependency */,
 			);
 			name = BeanTests;
 			productName = BeanTests;
@@ -345,8 +356,9 @@
 				A97644E2267C353A0063A384 /* Constaint.swift in Sources */,
 				A97268D9267361CD001506F4 /* Carrot.swift in Sources */,
 				A933164B26832CDF00AD3303 /* Leaf.swift in Sources */,
-				A92F652F2681873A00318039 /* Layout.swift in Sources */,
+				A92F652F2681873A00318039 /* Node.swift in Sources */,
 				A92F65322681BD1900318039 /* Storage.swift in Sources */,
+				A91D46BB2689AAAF0072BEF3 /* NodeLayout.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -365,6 +377,11 @@
 			isa = PBXTargetDependency;
 			target = A9D4DBFB2671A45100C0E846 /* Bean */;
 			targetProxy = A97268D5267325AD001506F4 /* PBXContainerItemProxy */;
+		};
+		A982A66E26841A3A009F92B5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A97268BC2673226B001506F4 /* example */;
+			targetProxy = A982A66D26841A3A009F92B5 /* PBXContainerItemProxy */;
 		};
 		A9D4DC082671A45100C0E846 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

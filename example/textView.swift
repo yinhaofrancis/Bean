@@ -9,32 +9,57 @@ import UIKit
 
 open class textView:UITextView{
     
-    var storage = limitTextStorage()
+    var storage = PostTextStorage()
     public override init(frame: CGRect, textContainer: NSTextContainer?) {
         super.init(frame: frame, textContainer: textContainer)
         self.storage.limit = 10
         self.textStorage.removeLayoutManager(self.layoutManager)
         self.storage.addLayoutManager(self.layoutManager)
+        self.typingAttributes = self.storage.defaultAttribute
+        
     }
     public required init?(coder: NSCoder) {
         super.init(coder: coder)
-        self.storage.limit = 10
+        self.storage.limit = 20
         self.textStorage.removeLayoutManager(self.layoutManager)
+        self.typingAttributes = self.storage.defaultAttribute
         self.storage.addLayoutManager(self.layoutManager)
     }
 }
 
-public class limitTextStorage:NSTextStorage{
+public class PostTextStorage:NSTextStorage{
     public var limit:Int = 0
     public var content = NSMutableAttributedString()
+    public var defaultAttribute:[NSAttributedString.Key:Any] = [
+        .font:UIFont.systemFont(ofSize: 16),
+        .foregroundColor:UIColor.gray
+    ]
+    public var atRegex:NSRegularExpression = try! NSRegularExpression(pattern: "(\\s|^)@\\S*(\\s|$)", options: .caseInsensitive)
+    public var groupRegex:NSRegularExpression = try! NSRegularExpression(pattern: "(\\s|^)#\\S*(\\s|$)", options: .caseInsensitive)
     public override func processEditing() {
-        
-        if (self.content.length > limit && limit > 0){
-            let useLimit = self.checkBounceIsEmoji() ?  limit : limit + 1
-            self.addAttributes([.backgroundColor:UIColor.red,.font:UIFont.systemFont(ofSize: 20)], range: NSRange(location: useLimit, length: self.length - useLimit))
-            self.addAttributes([.backgroundColor:UIColor.white,.font:UIFont.systemFont(ofSize: 20)], range: NSRange(location: 0, length: useLimit))
-        }
+//        guard let tv = self.textView else { return  }
+//        if (self.string.count > limit && limit > 0){
+//            let useLimitIndex = self.string.index(self.string.startIndex, offsetBy: limit)
+//            let useLimit = useLimitIndex.utf16Offset(in: self.string)
+//            var att = tv.typingAttributes
+//            att[.backgroundColor] = UIColor.red
+//            self.addAttributes(att, range: NSRange(location: useLimit, length: self.length - useLimit))
+//            att = tv.typingAttributes
+//            att[.backgroundColor] = UIColor.clear
+//            self.addAttributes(att, range: NSRange(location: 0, length: useLimit))
+//        }
+        self.setAttributes(self.defaultAttribute, range: NSRange(location: 0, length: self.string.count))
+        NSTextAttachmentContainer
+        self.loadHighlight(reg: atRegex, attribute: [.foregroundColor:UIColor.blue])
+        self.loadHighlight(reg: groupRegex, attribute: [.foregroundColor:UIColor.green])
         super.processEditing()
+    }
+    public func loadHighlight(reg:NSRegularExpression,attribute:[NSAttributedString.Key:Any]){
+        let result = reg.matches(in: self.string, options: .reportCompletion, range: NSRange(location: 0,length: self.string.count))
+        
+        for i in result{
+            self.setAttributes(attribute, range: i.range)
+        }
     }
     public override var string: String{
         return self.content.string
@@ -54,18 +79,7 @@ public class limitTextStorage:NSTextStorage{
         self.content.replaceCharacters(in: range, with: str)
         self.edited(.editedCharacters, range: range, changeInLength: str.utf16.count - range.length)
         self.endEditing()
-    }
-    func checkBounceIsEmoji()->Bool{
-        if(self.content.length > self.limit){
-            let current = self.content.string
-            let sub = current[current.utf16.index(current.utf16.startIndex, offsetBy: self.limit - 1)..<current.utf16.index(current.utf16.startIndex, offsetBy: self.limit + 1)]
-            if(sub.containsEmoji){
-                return true
-            }
-            return false
-        }else{
-            return false
-        }
+        print(str)
     }
 }
 extension Character {

@@ -2,7 +2,7 @@
 //  Carob.swift
 //  Bean
 //
-//  Created by hao yin on 2021/6/11.
+//  Created by WY on 2021/6/11.
 //
 
 import Foundation
@@ -172,7 +172,7 @@ public class Carrot<T:Seed>{
 
 public protocol Observer:AnyObject,Hashable{
     associatedtype State
-    func onChange(state:State)
+    func onChange(state:State,old:State)
 }
 public class StateObserver<T>:Observer {
     public static func == (lhs: StateObserver<T>, rhs: StateObserver<T>) -> Bool {
@@ -180,14 +180,14 @@ public class StateObserver<T>:Observer {
     }
     
     public typealias State = T
-    private var callback:(T)->Void
-    public func onChange(state: T) {
-        self.callback(state)
+    private var callback:(T,T)->Void
+    public func onChange(state: T,old:T) {
+        self.callback(state,old)
     }
     public func hash(into hasher: inout Hasher) {
         hasher.combine(self.id)
     }
-    public init(callback:@escaping (T)->Void){
+    public init(callback:@escaping (T,T)->Void){
         self.callback = callback
     }
     private var id:String = UUID().uuidString
@@ -199,7 +199,7 @@ public class State<O:Observer,T> where O.State == T{
     public var wrappedValue:T{
         didSet{
             for i in self.set{
-                i.onChange(state: wrappedValue)
+                i.onChange(state: wrappedValue,old: oldValue)
             }
         }
     }

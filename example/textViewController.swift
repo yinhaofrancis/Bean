@@ -12,10 +12,8 @@ class textViewController: UIViewController {
     @IBOutlet weak var textView: textView!
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        self.textView.storage.replaceCharacters(in: .init(location: 0, length: 0), with: "dsdsdsdsdsdsdsdsdsd")
         
-        // Do any additional setup after loading the view.
+        // Do any additiol setup after loading the view.
     }
     
 
