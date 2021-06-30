@@ -35,9 +35,10 @@ class ViewController2: UIViewController {
         v.nodeDidLoad { n in
             n.view.backgroundColor = UIColor.white
             let node = Node<UIView, StackLayoutStyle>(view: UIView())
-            node.view.view?.backgroundColor = UIColor.red
+            node.view.view?.backgroundColor = UIColor.systemPink
             node.crossAlign = .end
-            node.crossContentAlign = .center
+//            node.crossContentAlign =
+            
             node.axisAlign = .evenly
             node.size = ElementDual(x: .percent(0.8), y: .percent(0.8))
             node.postion = ElementDual(x: .percent(0.1), y: .percent(0.1))
@@ -48,17 +49,25 @@ class ViewController2: UIViewController {
             node2.crossBasis = .pt(30)
             node.addNode(node: node2)
             
+            for i in 0 ..< 13{
+                let noden = Node<UIView, AbsoluteLayoutStyle>(view: UIView())
+                noden.view.view?.backgroundColor = UIColor.gray
+                noden.basis = .pt(20)
+                noden.crossBasis = .pt(30)
+                node.addNode(node: noden)
+            }
             
             
             let node3 = Node<UIView, AbsoluteLayoutStyle>(view: UIView())
             node3.view.view?.backgroundColor = UIColor.green
-            node3.basis = .pt(20)
+            node3.basis = .unset
             node3.crossBasis = .pt(70)
+            
             node.addNode(node: node3)
             
             let node4 = Node<UIView, StackLayoutStyle>(view: UIView())
             node4.view.view?.backgroundColor = UIColor.green
-  
+            node4.grow = 0
             node.addNode(node: node4)
             
             
@@ -72,6 +81,13 @@ class ViewController2: UIViewController {
             node42.basis = .pt(30)
             node42.crossBasis = .pt(40)
             node4.addNode(node: node42)
+            
+            
+            let node43 = Node<UIView, AbsoluteLayoutStyle>(view: UIView())
+            node43.view.view?.backgroundColor = UIColor.yellow
+            node43.basis = .pt(30)
+            node43.crossBasis = .pt(50)
+            node4.addNode(node: node43)
         }
         self.showDetailViewController(v, sender: nil)
     }

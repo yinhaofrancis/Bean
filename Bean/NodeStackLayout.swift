@@ -112,7 +112,7 @@ public class StackLayoutStyle:LayoutStyle{
     func layoutItem(line:StackLine, parentElement:LayoutElement){
         var xStart:CGFloat = 0
         var xStep:CGFloat = 0
-        let noUseSpace = ((line.itemGrowSum > 0 && line.extraSpace > 0) || (line.itemShrinkSum > 0 && line.extraSpace < 0)) ? line.extraSpace:0
+        let noUseSpace = ((line.itemGrowSum > 0 && line.extraSpace > 0) || (line.itemShrinkSum > 0 && line.extraSpace < 0)) ? 0:line.extraSpace
         switch parentElement.axisAlign {
         case .start:
             xStart = 0
@@ -182,7 +182,13 @@ public class StackLayoutStyle:LayoutStyle{
     
     func calcSize(line:StackLine,item:LayoutElement,parentElement:LayoutElement) -> CGFloat{
         if item.axisSizeDimension.issUnset{
-            return (line.extraSpace > 0 ? (item.grow / line.itemGrowSum) * line.extraSpace : (item.shrink / line.itemShrinkSum) * line.extraSpace) + self.elementAxisSize(element: item, parentElement: parentElement)
+            if(line.extraSpace > 0 && line.itemGrowSum > 0){
+                return (item.grow / line.itemGrowSum) * line.extraSpace + self.elementAxisSize(element: item, parentElement: parentElement)
+            }else if(line.extraSpace < 0 && line.itemGrowSum > 0){
+                return (item.shrink / line.itemShrinkSum) * line.extraSpace + self.elementAxisSize(element: item, parentElement: parentElement)
+            }else{
+                return self.elementAxisSize(element: item, parentElement: parentElement)
+            }
         }else{
             return self.elementAxisSize(element: item, parentElement: parentElement)
         }
@@ -239,16 +245,21 @@ public class StackLayoutStyle:LayoutStyle{
                 l.crossBasis + r
             }
             lineExtra = self.crossLimit(parentElement: parantElement) - lsum
+            print(lineExtra)
             break;
         }
         var copyLines = lines
         for i in 0 ..< lines.count {
             copyLines[i].crossPosition = start
             copyLines[i].basisPosition = 0
-            start += copyLines[i].crossBasis
-            start += step
+            
             if(fill && lineExtra > 0){
                 copyLines[i].crossBasis += (lineExtra / CGFloat(lines.count))
+                start += copyLines[i].crossBasis
+                start += step
+            }else{
+                start += copyLines[i].crossBasis
+                start += step
             }
         }
         return copyLines
@@ -288,8 +299,8 @@ public class StackLayoutStyle:LayoutStyle{
                     items.append(currentElement)
                     sumV = s
                     maxV = h
-                    growSum = currentElement.grow
-                    shrinkSum = currentElement.shrink
+                    growSum = (currentElement.basis.issUnset == true ? currentElement.grow : 0)
+                    shrinkSum = (currentElement.basis.issUnset == true ? currentElement.shrink : 0)
                     lines.append(StackLine(array: items, basis: sumV, crossBasis: maxV,extraSpace: wlimit - sumV,itemGrowSum: growSum,itemShrinkSum: shrinkSum))
                     items = Array()
                     maxV = 0
@@ -306,15 +317,15 @@ public class StackLayoutStyle:LayoutStyle{
                     items.append(currentElement)
                     maxV = max(maxV, h)
                     sumV += s
-                    growSum += currentElement.grow
-                    shrinkSum += currentElement.shrink
+                    growSum += (currentElement.basis.issUnset == true ? currentElement.grow : 0)
+                    shrinkSum += (currentElement.basis.issUnset == true ? currentElement.shrink : 0)
                 }
             }else{
                 items.append(currentElement)
                 maxV = max(maxV, h)
                 sumV += s
-                growSum += currentElement.grow
-                shrinkSum += currentElement.shrink
+                growSum += (currentElement.basis.issUnset == true ? currentElement.grow : 0)
+                shrinkSum += (currentElement.basis.issUnset == true ? currentElement.shrink : 0)
             }
             index += 1
         }

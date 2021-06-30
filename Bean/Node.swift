@@ -21,7 +21,7 @@ extension UIView:DisplayWrap{
         return self
     }
     public var isRespond: Bool{
-        true
+        false
     }
 }
 

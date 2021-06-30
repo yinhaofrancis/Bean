@@ -154,7 +154,7 @@ public class LayoutElement:AbsoluteLayoutElement,StackLayoutElement,Hashable{
     
     public var crossSizeDimension:ElementDimension{
         let ax = self.parentElement?.axis ?? .horizontal
-        switch self.basis {
+        switch self.crossBasis {
         case .unset:
             return ax == .horizontal ? self.contentHeight : self.contentWidth
         default:
@@ -183,8 +183,6 @@ public class LayoutElement:AbsoluteLayoutElement,StackLayoutElement,Hashable{
     func addLayoutElement(element:LayoutElement){
         self.elements.append(element)
         element.parentElement = self
-
-        self.layout()
     }
     
     func insert(element:LayoutElement,below:LayoutElement){
@@ -193,7 +191,6 @@ public class LayoutElement:AbsoluteLayoutElement,StackLayoutElement,Hashable{
         guard let index = self.index(element: below) else { return }
         self.elements.insert(element, at: index)
         element.parentElement = self
-        self.layout()
         
     }
     func insert(element:LayoutElement,above:LayoutElement){
@@ -203,22 +200,17 @@ public class LayoutElement:AbsoluteLayoutElement,StackLayoutElement,Hashable{
         }else{
             self.elements.insert(element, at: index + 1)
             element.parentElement = self
-            self.layout()
         }
     }
     public func insert(element:LayoutElement,index:Int){
         self.elements.insert(element, at: index)
         element.parentElement = self
-
-        self.layout()
         
     }
     
     func removeFromSuperElement(){
         guard let index = self.parentElement?.index(element: self) else { return }
-    
         self.parentElement?.elements.remove(at: index)
-        self.parentElement?.layout()
     }
     func index(element:LayoutElement)->Array<LayoutElement>.Index?{
         let item = self.elements.firstIndex { e in
