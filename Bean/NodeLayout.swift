@@ -49,6 +49,8 @@ public protocol LayoutStyle{
     
     func layout(elements: Array<LayoutElement>, parentElement:LayoutElement)
 
+    func originSize(element:LayoutElement, parentElement:LayoutElement)->CGRect
+    
     init()
 }
 
@@ -73,14 +75,27 @@ public protocol AbsoluteLayoutElement:DisplayElement{
 
 
 public class  AbsoluteLayoutStyle:LayoutStyle{
+    public func originSize(element: LayoutElement, parentElement: LayoutElement)->CGRect {
+        var parentRect:CGRect
+        if(parentElement.parentElement == nil){
+            parentRect = parentElement.frame
+        }else{
+            parentRect = parentElement.parentElement!.layoutStyle.originSize(element: parentElement, parentElement: parentElement.parentElement!)
+        }
+        let x = element.postion.x.value(parent: parentRect.width)
+        let y = element.postion.y.value(parent: parentRect.height)
+        let w = element.size.x.value(parent: parentRect.width)
+        let h = element.size.y.value(parent: parentRect.height)
+        return CGRect(x: x, y: y, width: w, height: h)
+    }
+    
     public func layout(elements: Array<LayoutElement>, parentElement:LayoutElement) {
-        let parentRect = parentElement.frame
+        if(elements.count == 0){
+            return
+        }
         for i in elements {
-            let x = i.postion.x.value(parent: parentRect.width)
-            let y = i.postion.y.value(parent: parentRect.height)
-            let w = i.size.x.value(parent: parentRect.width)
-            let h = i.size.y.value(parent: parentRect.height)
-            i.loadFrame(rect: CGRect(x: x, y: y, width: w, height: h))
+            i.loadFrame(rect: self.originSize(element: i, parentElement: parentElement))
+            i.layoutStyle.layout(elements: i.elements, parentElement: i)
         }
     }
     required public init() {
@@ -97,13 +112,9 @@ public class LayoutElement:AbsoluteLayoutElement,StackLayoutElement,Hashable{
     
     public var axis: Axis = .horizontal
     
-    public var contentWidth: ElementDimension {
-        return .unset
-    }
+    public var contentWidth: ElementDimension = .unset
     
-    public var contentHeight: ElementDimension{
-        return .unset
-    }
+    public var contentHeight: ElementDimension = .unset
 
     public var basis: ElementDimension = .unset
     
@@ -154,7 +165,6 @@ public class LayoutElement:AbsoluteLayoutElement,StackLayoutElement,Hashable{
     public func loadFrame(rect: CGRect) {
         if(self.frame != rect){
             self.frame = rect
-            self.layout()
         }
     }
     

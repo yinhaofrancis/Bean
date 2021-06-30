@@ -41,7 +41,25 @@ public protocol StackLayoutElement:DisplayElement{
 }
 
 public class StackLayoutStyle:LayoutStyle{
-    
+    public func originSize(element: LayoutElement, parentElement: LayoutElement)->CGRect {
+        var rect:CGRect
+        if(parentElement.parentElement == nil){
+            rect = parentElement.frame
+        }else{
+            rect = parentElement.parentElement!.layoutStyle.originSize(element: parentElement, parentElement: parentElement.parentElement!)
+        }
+        if parentElement.axis == .horizontal{
+            let a = element.basis.issUnset ? 0 : element.basis.value(parent: rect.width)
+            let c = element.basis.issUnset ? 0 : element.basis.value(parent: rect.height)
+            return CGRect(x: 0, y: 0, width: a, height: c)
+        }else{
+            let a = element.basis.issUnset ? 0 : element.basis.value(parent: rect.height)
+            let c = element.basis.issUnset ? 0 : element.basis.value(parent: rect.width)
+            return CGRect(x: 0, y: 0, width: c, height: a)
+        }
+        
+    }
+
     struct StackLine{
         var array = Array<LayoutElement>()
         var basis:CGFloat = 0
@@ -54,8 +72,39 @@ public class StackLayoutStyle:LayoutStyle{
     }
     
     public func layout(elements: Array<LayoutElement>, parentElement:LayoutElement) {
+        
+        if(elements.count == 0){
+            return
+        }
+        for i in elements {
+            let frame = self.originSize(element: i, parentElement: parentElement)
+            i.loadFrame(rect: frame)
+        }
+        for i in elements {
+            i.layoutStyle.layout(elements: i.elements, parentElement: i)
+        }
         var lines = self.seperateLine(elements: elements, parentElement: parentElement)
         lines = self.layoutLine(lines: lines, parantElement: parentElement)
+        if lines.count > 0{
+            switch parentElement.axis {
+            case .vertical:
+                if(parentElement.crossBasis.issUnset){
+                    parentElement.contentWidth = .pt(lines.max(by: {$0.crossBasis > $1.crossPosition})!.crossBasis)
+                }
+                if(parentElement.basis.issUnset) {
+                    parentElement.contentHeight = .pt(lines.max(by: {$0.basis > $1.crossPosition})!.basis)
+                }
+                
+            case .horizontal:
+                if(parentElement.crossBasis.issUnset){
+                    parentElement.contentHeight = .pt(lines.max(by: {$0.crossBasis > $1.crossPosition})!.crossBasis)
+                }
+                if(parentElement.basis.issUnset) {
+                    parentElement.contentWidth = .pt(lines.max(by: {$0.basis > $1.crossPosition})!.basis)
+                }
+            }
+        }
+        
         for i in lines {
             self.layoutItem(line: i, parentElement: parentElement)
         }
@@ -205,7 +254,14 @@ public class StackLayoutStyle:LayoutStyle{
         return copyLines
     }
     func axisLimit(parentElement:LayoutElement)->CGFloat{
-        parentElement.wrap ? (parentElement.axis == .horizontal ? parentElement.frame.width : parentElement.frame.height) : CGFloat.infinity
+        
+        let size = parentElement.wrap ? (parentElement.axis == .horizontal ? parentElement.frame.width : parentElement.frame.height) : CGFloat.infinity
+        if size == 0 {
+            if parentElement.basis.issUnset{
+                return .infinity
+            }
+        }
+        return size
     }
     func crossLimit(parentElement:LayoutElement)->CGFloat{
         parentElement.axis != .horizontal ? parentElement.frame.width : parentElement.frame.height
