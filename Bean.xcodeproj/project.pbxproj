@@ -22,6 +22,7 @@
 		A9D4DC062671A45100C0E846 /* Bean.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9D4DBFC2671A45100C0E846 /* Bean.framework */; };
 		A9D4DC0B2671A45100C0E846 /* BeanTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D4DC0A2671A45100C0E846 /* BeanTests.swift */; };
 		A9D4DC202671A91E00C0E846 /* bean.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = A9D4DC1F2671A91E00C0E846 /* bean.xcconfig */; };
+		A9DF3743268E02CA004A191B /* GettrTextStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DF3742268E02CA004A191B /* GettrTextStorage.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -83,6 +84,7 @@
 		A9D4DC0C2671A45100C0E846 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A9D4DC1C2671A90800C0E846 /* Bean.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bean.swift; sourceTree = "<group>"; };
 		A9D4DC1F2671A91E00C0E846 /* bean.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = bean.xcconfig; sourceTree = "<group>"; };
+		A9DF3742268E02CA004A191B /* GettrTextStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GettrTextStorage.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,6 +125,7 @@
 				A97268CA26732270001506F4 /* LaunchScreen.storyboard */,
 				A97268CD26732270001506F4 /* Info.plist */,
 				A97644E5267C9D120063A384 /* View.xib */,
+				A9DF3742268E02CA004A191B /* GettrTextStorage.swift */,
 				A996312B26884F6B004504B0 /* textView.swift */,
 				A996312F26886E8A004504B0 /* textViewController.swift */,
 			);
@@ -330,6 +333,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A9DF3743268E02CA004A191B /* GettrTextStorage.swift in Sources */,
 				A97268C42673226B001506F4 /* ViewController.swift in Sources */,
 				A97268C02673226B001506F4 /* AppDelegate.swift in Sources */,
 				A996312C26884F6B004504B0 /* textView.swift in Sources */,

@@ -9,21 +9,14 @@ import UIKit
 
 open class textView:UITextView{
     
-    var storage = PostTextStorage()
+    var storage = GettrTextStorage()
     public override init(frame: CGRect, textContainer: NSTextContainer?) {
         super.init(frame: frame, textContainer: textContainer)
-        self.storage.limit = 10
-        self.textStorage.removeLayoutManager(self.layoutManager)
-        self.storage.addLayoutManager(self.layoutManager)
-        self.typingAttributes = self.storage.defaultAttribute
-        
+        self.storage.configTextView(view: self)
     }
     public required init?(coder: NSCoder) {
         super.init(coder: coder)
-        self.storage.limit = 20
-        self.textStorage.removeLayoutManager(self.layoutManager)
-        self.typingAttributes = self.storage.defaultAttribute
-        self.storage.addLayoutManager(self.layoutManager)
+        self.storage.configTextView(view: self)
     }
 }
 
