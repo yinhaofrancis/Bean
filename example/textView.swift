@@ -13,9 +13,12 @@ open class textView:UITextView{
     public override init(frame: CGRect, textContainer: NSTextContainer?) {
         super.init(frame: frame, textContainer: textContainer)
         self.storage.limit = 10
+        
         self.textStorage.removeLayoutManager(self.layoutManager)
         self.storage.addLayoutManager(self.layoutManager)
         self.typingAttributes = self.storage.defaultAttribute
+        self.storage.textView = self
+        self.storage.delegate = self.storage
         
     }
     public required init?(coder: NSCoder) {
@@ -24,12 +27,16 @@ open class textView:UITextView{
         self.textStorage.removeLayoutManager(self.layoutManager)
         self.typingAttributes = self.storage.defaultAttribute
         self.storage.addLayoutManager(self.layoutManager)
+        self.storage.textView = self
+        self.storage.delegate = self.storage
     }
 }
 
-public class PostTextStorage:NSTextStorage{
+public class PostTextStorage:NSTextStorage,NSTextStorageDelegate{
     public var limit:Int = 0
+    public weak var textView:UITextView?
     public var content = NSMutableAttributedString()
+    private var elements:Set<TextAttachment> = Set()
     public var defaultAttribute:[NSAttributedString.Key:Any] = [
         .font:UIFont.systemFont(ofSize: 16),
         .foregroundColor:UIColor.gray
@@ -37,7 +44,7 @@ public class PostTextStorage:NSTextStorage{
     public var atRegex:NSRegularExpression = try! NSRegularExpression(pattern: "(\\s|^)@\\S*(\\s|$)", options: .caseInsensitive)
     public var groupRegex:NSRegularExpression = try! NSRegularExpression(pattern: "(\\s|^)#\\S*(\\s|$)", options: .caseInsensitive)
     public override func processEditing() {
-        self.setAttributes(self.defaultAttribute, range: NSRange(location: 0, length: self.string.count))
+        self.addAttributes(self.defaultAttribute, range: NSRange(location: 0, length: self.string.count))
         self.loadHighlight(reg: atRegex, attribute: [.foregroundColor:UIColor.blue])
         self.loadHighlight(reg: groupRegex, attribute: [.foregroundColor:UIColor.green])
         super.processEditing()
@@ -65,11 +72,46 @@ public class PostTextStorage:NSTextStorage{
     public override func replaceCharacters(in range: NSRange, with str: String) {
         self.beginEditing()
         self.content.replaceCharacters(in: range, with: str)
-        self.edited(.editedCharacters, range: range, changeInLength: str.utf16.count - range.length)
+        self.edited([.editedCharacters], range: range, changeInLength: str.utf16.count - range.length)
         self.endEditing()
-        print(str)
+    }
+    public func addAttachment(attach:TextAttachment){
+        let att = NSAttributedString(attachment: attach)
+        self.elements.insert(attach)
+        self.content.append(att)
+        attach.textView = self.textView
+        self.edited(.editedAttributes, range: NSRange(location: self.content.length - att.length, length: 0), changeInLength:att.length)
+        self.textView?.resignFirstResponder()
+    }
+    public func textStorage(_ textStorage: NSTextStorage, willProcessEditing editedMask: NSTextStorage.EditActions, range editedRange: NSRange, changeInLength delta: Int) {
+        if delta < 0{
+            let a = self.allAttachments
+            if(self.elements != a){
+                self.elements.filter { e in
+                    !a.contains(e)
+                }.forEach { i in
+                    i.remove()
+                }
+                self.elements = a;
+            }
+        }
+    }
+    private var allAttachments:Set<TextAttachment>{
+        var result:Set<TextAttachment> = Set()
+        self.enumerateAttribute(.attachment, in: NSRange(location: 0, length: self.length), options: .reverse) { a, r, e in
+            if let att = a as? TextAttachment{
+                result.insert(att)
+            }
+        }
+        return result
     }
 }
+
+
+
+
+
+
 extension Character {
     /// A simple emoji is one scalar and presented to the user as an Emoji
     var isSimpleEmoji: Bool {

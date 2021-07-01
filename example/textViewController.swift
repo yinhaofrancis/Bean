@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import Combine
 class textViewController: UIViewController {
 
     @IBOutlet weak var textView: textView!
@@ -14,6 +14,13 @@ class textViewController: UIViewController {
         super.viewDidLoad()
         
         // Do any additiol setup after loading the view.
+    }
+ 
+    override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
+        self.textView.storage.addAttachment(attach: TextAttachment())
+        print(textView.storage.enumerateAttribute(NSAttributedString.Key.attachment, in: NSRange(location: 0, length: self.textView.storage.length), options: .longestEffectiveRangeNotRequired, using: { a, r, e in
+            print(a,r,e)
+        }))
     }
     
 

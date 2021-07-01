@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A92F919D268D90A1001C5693 /* HyperText.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F919C268D90A1001C5693 /* HyperText.swift */; };
 		A933164B26832CDF00AD3303 /* Leaf.swift in Sources */ = {isa = PBXBuildFile; fileRef = A933164A26832CDF00AD3303 /* Leaf.swift */; };
 		A97268C02673226B001506F4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97268BF2673226B001506F4 /* AppDelegate.swift */; };
 		A97268C42673226B001506F4 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97268C32673226B001506F4 /* ViewController.swift */; };
@@ -63,6 +64,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		A92F919C268D90A1001C5693 /* HyperText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HyperText.swift; sourceTree = "<group>"; };
 		A933164A26832CDF00AD3303 /* Leaf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Leaf.swift; sourceTree = "<group>"; };
 		A97268BD2673226B001506F4 /* example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A97268BF2673226B001506F4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -124,6 +126,7 @@
 				A97268CD26732270001506F4 /* Info.plist */,
 				A97644E5267C9D120063A384 /* View.xib */,
 				A996312B26884F6B004504B0 /* textView.swift */,
+				A92F919C268D90A1001C5693 /* HyperText.swift */,
 				A996312F26886E8A004504B0 /* textViewController.swift */,
 			);
 			path = example;
@@ -332,6 +335,7 @@
 			files = (
 				A97268C42673226B001506F4 /* ViewController.swift in Sources */,
 				A97268C02673226B001506F4 /* AppDelegate.swift in Sources */,
+				A92F919D268D90A1001C5693 /* HyperText.swift in Sources */,
 				A996312C26884F6B004504B0 /* textView.swift in Sources */,
 				A996313026886E8A004504B0 /* textViewController.swift in Sources */,
 			);
