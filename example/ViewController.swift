@@ -49,7 +49,7 @@ class ViewController2: UIViewController {
             node2.crossBasis = .pt(30)
             node.addNode(node: node2)
             
-            for i in 0 ..< 13{
+            for _ in 0 ..< 13{
                 let noden = Node<UIView, AbsoluteLayoutStyle>(view: UIView())
                 noden.view.view?.backgroundColor = UIColor.gray
                 noden.basis = .pt(30)

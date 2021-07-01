@@ -60,7 +60,11 @@ public class StackLayoutStyle:LayoutStyle{
         
     }
 
-    class StackLine{
+    class StackLine:CustomDebugStringConvertible{
+        var debugDescription: String{
+            return "\(CGRect(x: basisPosition, y: crossPosition, width: basis, height: crossBasis))"
+        }
+        
         var array = Array<LayoutElement>()
         var basis:CGFloat = 0
         var crossBasis:CGFloat = 0
