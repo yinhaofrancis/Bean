@@ -120,7 +120,7 @@ public class StackLayoutStyle:LayoutStyle{
     func layoutItem(line:StackLine, parentElement:LayoutElement){
         var xStart:CGFloat = 0
         var xStep:CGFloat = 0
-        var noUseSpace = ((line.itemGrowSum > 0 && line.extraSpace > 0) || (line.itemShrinkSum > 0 && line.extraSpace < 0)) ? 0:line.extraSpace
+        let noUseSpace = ((line.itemGrowSum > 0 && line.extraSpace > 0) || (line.itemShrinkSum > 0 && line.extraSpace < 0)) ? 0:line.extraSpace
         switch parentElement.axisAlign {
         case .start:
             xStart = 0
@@ -201,8 +201,10 @@ public class StackLayoutStyle:LayoutStyle{
     func calcSize(line:StackLine,item:LayoutElement,parentElement:LayoutElement) -> (CGFloat,Bool){
         if item.basis.issUnset{
             if(line.extraSpace > 0 && line.itemGrowSum > 0){
-                return ((item.grow / line.itemGrowSum) * line.extraSpace + self.elementAxisSize(element: item, parentElement: parentElement),true)
-            }else if(line.extraSpace < 0 && line.itemGrowSum > 0){
+                let a = ((item.grow / line.itemGrowSum) * line.extraSpace + self.elementAxisSize(element: item, parentElement: parentElement),true)
+                print(a.0)
+                return a
+            }else if(line.extraSpace < 0 && line.itemShrinkSum > 0){
                 return ((item.shrink / line.itemShrinkSum) * line.extraSpace + self.elementAxisSize(element: item, parentElement: parentElement),true)
             }else{
                 return (self.elementAxisSize(element: item, parentElement: parentElement),false)

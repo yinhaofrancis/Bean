@@ -45,14 +45,14 @@ class ViewController2: UIViewController {
             n.addNode(node: node)
             let node2 = Node<UIView, AbsoluteLayoutStyle>(view: UIView())
             node2.view.view?.backgroundColor = UIColor.yellow
-            node2.basis = .pt(20)
+            node2.basis = .pt(40)
             node2.crossBasis = .pt(30)
             node.addNode(node: node2)
             
             for i in 0 ..< 13{
                 let noden = Node<UIView, AbsoluteLayoutStyle>(view: UIView())
                 noden.view.view?.backgroundColor = UIColor.gray
-                noden.basis = .pt(20)
+                noden.basis = .pt(30)
                 noden.crossBasis = .pt(30)
                 node.addNode(node: noden)
             }
@@ -60,14 +60,14 @@ class ViewController2: UIViewController {
             
             let node3 = Node<UIView, AbsoluteLayoutStyle>(view: UIView())
             node3.view.view?.backgroundColor = UIColor.green
-            node3.basis = .unset
+//            node3.basis = .pt(10)
             node3.crossBasis = .pt(70)
             
             node.addNode(node: node3)
             
             let node4 = Node<UIView, StackLayoutStyle>(view: UIView())
             node4.view.view?.backgroundColor = UIColor.green
-            node4.grow = 0
+            node4.grow = 1
 //            node4.alignSelf = .stretch
             node4.axis = .horizontal
             node4.crossAlign = .center
@@ -89,7 +89,8 @@ class ViewController2: UIViewController {
             
             let node43 = Node<UIView, AbsoluteLayoutStyle>(view: UIView())
             node43.view.view?.backgroundColor = UIColor.yellow
-            node43.basis = .pt(30)
+//            node43.basis = .pt(30)
+            node43.grow = 1
             node43.crossBasis = .pt(50)
             node4.addNode(node: node43)
         }
