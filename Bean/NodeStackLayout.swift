@@ -60,7 +60,7 @@ public class StackLayoutStyle:LayoutStyle{
         
     }
 
-    struct StackLine{
+    class StackLine{
         var array = Array<LayoutElement>()
         var basis:CGFloat = 0
         var crossBasis:CGFloat = 0
@@ -69,6 +69,14 @@ public class StackLayoutStyle:LayoutStyle{
         var crossPosition:CGFloat = 0
         var itemGrowSum:CGFloat = 0
         var itemShrinkSum:CGFloat = 0
+        init(array: Array<LayoutElement>, basis: CGFloat, crossBasis: CGFloat,extraSpace: CGFloat,itemGrowSum: CGFloat,itemShrinkSum:CGFloat){
+            self.array = array
+            self.basis = basis
+            self.crossBasis = crossBasis
+            self.extraSpace = extraSpace
+            self.itemGrowSum = itemGrowSum
+            self.itemShrinkSum = itemShrinkSum
+        }
     }
     
     public func layout(elements: Array<LayoutElement>, parentElement:LayoutElement) {
@@ -83,24 +91,30 @@ public class StackLayoutStyle:LayoutStyle{
         for i in elements {
             i.layoutStyle.layout(elements: i.elements, parentElement: i)
         }
-        var lines = self.seperateLine(elements: elements, parentElement: parentElement)
-        lines = self.layoutLine(lines: lines, parantElement: parentElement)
+        let lines = self.seperateLine(elements: elements, parentElement: parentElement)
+        self.layoutLine(lines: lines, parantElement: parentElement)
         if lines.count > 0{
             switch parentElement.axis {
             case .vertical:
                 if(parentElement.crossBasis.issUnset){
-                    parentElement.contentWidth = .pt(lines.max(by: {$0.crossBasis > $1.crossPosition})!.crossBasis)
+                    parentElement.contentWidth = lines.max(by: {$0.crossBasis > $1.crossPosition})!.crossBasis
                 }
                 if(parentElement.basis.issUnset) {
-                    parentElement.contentHeight = .pt(lines.max(by: {$0.basis > $1.crossPosition})!.basis)
+                    parentElement.contentHeight = lines.max(by: {$0.basis > $1.crossPosition})!.basis
+                    if(lines.count == 1 && lines.first!.itemGrowSum == 0 && lines.first!.itemShrinkSum == 0){
+                        lines.first?.extraSpace = 0;
+                    }
                 }
                 
             case .horizontal:
                 if(parentElement.crossBasis.issUnset){
-                    parentElement.contentHeight = .pt(lines.max(by: {$0.crossBasis > $1.crossPosition})!.crossBasis)
+                    parentElement.contentHeight = lines.max(by: {$0.crossBasis > $1.crossPosition})!.crossBasis
                 }
                 if(parentElement.basis.issUnset) {
-                    parentElement.contentWidth = .pt(lines.max(by: {$0.basis > $1.crossPosition})!.basis)
+                    parentElement.contentWidth = lines.max(by: {$0.basis > $1.crossPosition})!.basis
+                    if(lines.count == 1  && lines.first!.itemGrowSum == 0 && lines.first!.itemShrinkSum == 0){
+                        lines.first?.extraSpace = 0;
+                    }
                 }
             }
         }
@@ -144,10 +158,10 @@ public class StackLayoutStyle:LayoutStyle{
         for i in 0 ..< line.array.count {
             let item = line.array[i]
             let align = item.alignSelf ?? parentElement.crossAlign
-            let w:CGFloat = self.calcSize(line: line, item: item, parentElement: parentElement)
-            let h:CGFloat = (align == .stretch && item.crossSizeDimension.issUnset) ? line.crossBasis : self.elementCrossSize(element: item, parentElement: parentElement)
+            let w = self.calcSize(line: line, item: item, parentElement: parentElement)
+            let h = self.calcCrossSize(line: line, item: item, parentElement: parentElement, align: align)
             let x = xStart
-            xStart = xStart + w + xStep
+            xStart = xStart + w.0 + xStep
             let ySpace = (align == .stretch && item.crossSizeDimension.issUnset) ? 0 : line.crossBasis - self.elementCrossSize(element: item, parentElement: parentElement)
             var y:CGFloat = 0
             switch align {
@@ -168,10 +182,16 @@ public class StackLayoutStyle:LayoutStyle{
             switch parentElement.axis {
             
             case .vertical:
-                item.loadFrame(rect: CGRect(x: y + line.crossPosition, y: x + line.basisPosition, width: h, height: w))
+                item.loadFrame(rect: CGRect(x: y + line.crossPosition, y: x + line.basisPosition, width: h.0, height: w.0))
+                if(w.1 || h.1){
+                    item.layout()
+                }
                 break
             case .horizontal:
-                item.loadFrame(rect: CGRect(x: x + line.basisPosition, y:y + line.crossPosition , width: w, height: h))
+                item.loadFrame(rect: CGRect(x: x + line.basisPosition, y:y + line.crossPosition , width: w.0, height: h.0))
+                if(w.1 || h.1){
+                    item.layout()
+                }
                 break
             }
         }
@@ -180,24 +200,32 @@ public class StackLayoutStyle:LayoutStyle{
         
     }
     
-    func calcSize(line:StackLine,item:LayoutElement,parentElement:LayoutElement) -> CGFloat{
-        if item.axisSizeDimension.issUnset{
+    func calcSize(line:StackLine,item:LayoutElement,parentElement:LayoutElement) -> (CGFloat,Bool){
+        if item.basis.issUnset{
             if(line.extraSpace > 0 && line.itemGrowSum > 0){
-                return (item.grow / line.itemGrowSum) * line.extraSpace + self.elementAxisSize(element: item, parentElement: parentElement)
+                return ((item.grow / line.itemGrowSum) * line.extraSpace + self.elementAxisSize(element: item, parentElement: parentElement),true)
             }else if(line.extraSpace < 0 && line.itemGrowSum > 0){
-                return (item.shrink / line.itemShrinkSum) * line.extraSpace + self.elementAxisSize(element: item, parentElement: parentElement)
+                return ((item.shrink / line.itemShrinkSum) * line.extraSpace + self.elementAxisSize(element: item, parentElement: parentElement),true)
             }else{
-                return self.elementAxisSize(element: item, parentElement: parentElement)
+                return (self.elementAxisSize(element: item, parentElement: parentElement),false)
             }
         }else{
-            return self.elementAxisSize(element: item, parentElement: parentElement)
+            return (self.elementAxisSize(element: item, parentElement: parentElement),false)
         }
         
     }
+    func calcCrossSize(line:StackLine,item:LayoutElement,parentElement:LayoutElement,align:CrossAlign) -> (CGFloat,Bool){
+        let h = (align == .stretch && item.crossBasis.issUnset) ? line.crossBasis : self.elementCrossSize(element: item, parentElement: parentElement)
+        if(align == .stretch){
+            return (h,true)
+        }else{
+            return (h,false)
+        }
+    }
     
-    func layoutLine(lines:[StackLine],parantElement:LayoutElement)->[StackLine] {
+    func layoutLine(lines:[StackLine],parantElement:LayoutElement) {
         if(lines.count == 0){
-            return []
+            return
         }
         var start:CGFloat = 0
         var step:CGFloat = 0
@@ -245,28 +273,25 @@ public class StackLayoutStyle:LayoutStyle{
                 l.crossBasis + r
             }
             lineExtra = self.crossLimit(parentElement: parantElement) - lsum
-            print(lineExtra)
             break;
         }
-        var copyLines = lines
         for i in 0 ..< lines.count {
-            copyLines[i].crossPosition = start
-            copyLines[i].basisPosition = 0
+            lines[i].crossPosition = start
+            lines[i].basisPosition = 0
             
             if(fill && lineExtra > 0){
-                copyLines[i].crossBasis += (lineExtra / CGFloat(lines.count))
-                start += copyLines[i].crossBasis
+                lines[i].crossBasis += (lineExtra / CGFloat(lines.count))
+                start += lines[i].crossBasis
                 start += step
             }else{
-                start += copyLines[i].crossBasis
+                start += lines[i].crossBasis
                 start += step
             }
         }
-        return copyLines
     }
     func axisLimit(parentElement:LayoutElement)->CGFloat{
         
-        let size = parentElement.wrap ? (parentElement.axis == .horizontal ? parentElement.frame.width : parentElement.frame.height) : CGFloat.infinity
+        let size = parentElement.wrap ? parentElement.axisDisplaySize(axis: parentElement.axis) : CGFloat.infinity
         if size == 0 {
             if parentElement.basis.issUnset{
                 return .infinity
@@ -275,7 +300,7 @@ public class StackLayoutStyle:LayoutStyle{
         return size
     }
     func crossLimit(parentElement:LayoutElement)->CGFloat{
-        parentElement.axis != .horizontal ? parentElement.frame.width : parentElement.frame.height
+        parentElement.crossDisplaySize(axis: parentElement.axis)
     }
     func seperateLine(elements: Array<LayoutElement>, parentElement:LayoutElement) ->[StackLine]{
         let wlimit = self.axisLimit(parentElement: parentElement)
@@ -301,14 +326,16 @@ public class StackLayoutStyle:LayoutStyle{
                     maxV = h
                     growSum = (currentElement.basis.issUnset == true ? currentElement.grow : 0)
                     shrinkSum = (currentElement.basis.issUnset == true ? currentElement.shrink : 0)
-                    lines.append(StackLine(array: items, basis: sumV, crossBasis: maxV,extraSpace: wlimit - sumV,itemGrowSum: growSum,itemShrinkSum: shrinkSum))
+                    let wContainer = parentElement.axisDisplaySize(axis: parentElement.axis)
+                    lines.append(StackLine(array: items, basis: sumV, crossBasis: maxV,extraSpace: wContainer - sumV,itemGrowSum: growSum,itemShrinkSum: shrinkSum))
                     items = Array()
                     maxV = 0
                     sumV = 0
                     growSum = 0
                     shrinkSum = 0
                 }else{
-                    lines.append(StackLine(array: items, basis: sumV, crossBasis: maxV,extraSpace: wlimit - sumV,itemGrowSum: growSum,itemShrinkSum: shrinkSum))
+                    let wContainer = parentElement.axisDisplaySize(axis: parentElement.axis)
+                    lines.append(StackLine(array: items, basis: sumV, crossBasis: maxV,extraSpace: wContainer - sumV,itemGrowSum: growSum,itemShrinkSum: shrinkSum))
                     items = Array()
                     maxV = 0
                     sumV = 0
@@ -330,7 +357,8 @@ public class StackLayoutStyle:LayoutStyle{
             index += 1
         }
         if(items.count > 0){
-            lines.append(StackLine(array: items, basis: sumV, crossBasis: maxV,extraSpace: wlimit - sumV,itemGrowSum: growSum,itemShrinkSum: shrinkSum))
+            let wContainer = parentElement.axisDisplaySize(axis: parentElement.axis)
+            lines.append(StackLine(array: items, basis: sumV, crossBasis: maxV,extraSpace: wContainer - sumV,itemGrowSum: growSum,itemShrinkSum: shrinkSum))
         }
         return lines
     }

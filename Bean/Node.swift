@@ -21,7 +21,7 @@ extension UIView:DisplayWrap{
         return self
     }
     public var isRespond: Bool{
-        false
+        true
     }
 }
 
@@ -30,8 +30,6 @@ extension UIView:DisplayWrap{
 
 
 public class Node<View:DisplayWrap,Style:LayoutStyle>:LayoutElement{
-    
-    
     
     public private (set) var view:View
     

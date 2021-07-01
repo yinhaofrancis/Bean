@@ -63,8 +63,8 @@ public protocol LayoutContainer{
 
 public protocol DisplayElement:AnyObject {
     func loadFrame(rect:CGRect)
-    var contentWidth:ElementDimension { get }
-    var contentHeight:ElementDimension { get }
+    var contentWidth:CGFloat { get }
+    var contentHeight:CGFloat { get }
 }
 // absolute
 public protocol AbsoluteLayoutElement:DisplayElement{
@@ -112,9 +112,9 @@ public class LayoutElement:AbsoluteLayoutElement,StackLayoutElement,Hashable{
     
     public var axis: Axis = .horizontal
     
-    public var contentWidth: ElementDimension = .unset
+    public var contentWidth: CGFloat = 0
     
-    public var contentHeight: ElementDimension = .unset
+    public var contentHeight: CGFloat = 0
 
     public var basis: ElementDimension = .unset
     
@@ -142,11 +142,13 @@ public class LayoutElement:AbsoluteLayoutElement,StackLayoutElement,Hashable{
     
     public var layoutStyle: LayoutStyle = AbsoluteLayoutStyle()
     
+    public weak var parentElement:LayoutElement?
+    
     public var axisSizeDimension:ElementDimension{
         let ax = self.parentElement?.axis ?? .horizontal
         switch self.basis {
         case .unset:
-            return ax != .horizontal ? self.contentHeight : self.contentWidth
+            return ax != .horizontal ? .pt(self.contentHeight) : .pt(self.contentWidth)
         default:
             return self.basis
         }
@@ -156,7 +158,7 @@ public class LayoutElement:AbsoluteLayoutElement,StackLayoutElement,Hashable{
         let ax = self.parentElement?.axis ?? .horizontal
         switch self.crossBasis {
         case .unset:
-            return ax == .horizontal ? self.contentHeight : self.contentWidth
+            return ax == .horizontal ? .pt(self.contentHeight) : .pt(self.contentWidth)
         default:
             return self.crossBasis
         }
@@ -178,7 +180,7 @@ public class LayoutElement:AbsoluteLayoutElement,StackLayoutElement,Hashable{
         hasher.combine(Unmanaged.passUnretained(self).toOpaque())
     }
     
-    public var parentElement:LayoutElement?
+    
     
     func addLayoutElement(element:LayoutElement){
         self.elements.append(element)
@@ -220,5 +222,21 @@ public class LayoutElement:AbsoluteLayoutElement,StackLayoutElement,Hashable{
     }
     public func layout(){
         self.layoutStyle.layout(elements: self.elements, parentElement: self)
+    }
+    public func axisDisplaySize(axis:Axis)->CGFloat{
+        switch axis {
+        case .vertical:
+            return frame.height
+        case .horizontal:
+            return frame.width
+        }
+    }
+    public func crossDisplaySize(axis:Axis)->CGFloat{
+        switch axis {
+        case .vertical:
+            return frame.width
+        case .horizontal:
+            return frame.height
+        }
     }
 }

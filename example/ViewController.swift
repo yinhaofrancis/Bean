@@ -39,7 +39,7 @@ class ViewController2: UIViewController {
             node.crossAlign = .end
 //            node.crossContentAlign =
             
-            node.axisAlign = .evenly
+            node.axisAlign = .end
             node.size = ElementDual(x: .percent(0.8), y: .percent(0.8))
             node.postion = ElementDual(x: .percent(0.1), y: .percent(0.1))
             n.addNode(node: node)
@@ -68,6 +68,9 @@ class ViewController2: UIViewController {
             let node4 = Node<UIView, StackLayoutStyle>(view: UIView())
             node4.view.view?.backgroundColor = UIColor.green
             node4.grow = 0
+            node4.axis = .vertical
+            node4.crossAlign = .center
+            node4.axisAlign = .center
             node.addNode(node: node4)
             
             
