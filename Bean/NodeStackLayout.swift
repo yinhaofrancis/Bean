@@ -101,9 +101,6 @@ public class StackLayoutStyle:LayoutStyle{
                 }
                 if(parentElement.basis.issUnset) {
                     parentElement.contentHeight = lines.max(by: {$0.basis > $1.crossPosition})!.basis
-                    if(lines.count == 1 && lines.first!.itemGrowSum == 0 && lines.first!.itemShrinkSum == 0){
-                        lines.first?.extraSpace = 0;
-                    }
                 }
                 
             case .horizontal:
@@ -112,9 +109,6 @@ public class StackLayoutStyle:LayoutStyle{
                 }
                 if(parentElement.basis.issUnset) {
                     parentElement.contentWidth = lines.max(by: {$0.basis > $1.crossPosition})!.basis
-                    if(lines.count == 1  && lines.first!.itemGrowSum == 0 && lines.first!.itemShrinkSum == 0){
-                        lines.first?.extraSpace = 0;
-                    }
                 }
             }
         }
@@ -126,7 +120,7 @@ public class StackLayoutStyle:LayoutStyle{
     func layoutItem(line:StackLine, parentElement:LayoutElement){
         var xStart:CGFloat = 0
         var xStep:CGFloat = 0
-        let noUseSpace = ((line.itemGrowSum > 0 && line.extraSpace > 0) || (line.itemShrinkSum > 0 && line.extraSpace < 0)) ? 0:line.extraSpace
+        var noUseSpace = ((line.itemGrowSum > 0 && line.extraSpace > 0) || (line.itemShrinkSum > 0 && line.extraSpace < 0)) ? 0:line.extraSpace
         switch parentElement.axisAlign {
         case .start:
             xStart = 0
@@ -134,10 +128,12 @@ public class StackLayoutStyle:LayoutStyle{
             break
         case .center:
             xStart = noUseSpace / 2.0
+            xStart = xStart < 0 ? 0 : xStart
             xStep = 0
             break
         case .end:
             xStart = noUseSpace
+            xStart = xStart < 0 ? 0 : xStart
             xStep = 0
             break
         case .between:
@@ -149,10 +145,12 @@ public class StackLayoutStyle:LayoutStyle{
             break
         case .around:
             xStart = noUseSpace / CGFloat(line.array.count * 2)
+            xStart = xStart < 0 ? 0 : xStart
             xStep = xStart * 2
             break
         case .evenly:
             xStart = noUseSpace / CGFloat(line.array.count + 1)
+            xStart = xStart < 0 ? 0 : xStart
             xStep = xStart
         }
         for i in 0 ..< line.array.count {
