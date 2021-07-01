@@ -27,28 +27,12 @@ class ViewController2: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.state?.$nae.addObserver(observer: { n, old in
-            print(n)
-        })
+      
     }
 
     @IBAction func change(_ sender: Any) {
         self.state?.$nae.request(param: ["limit":"10","page":"1"])
-        let v = NodeViewController<UIView,AbsoluteLayoutStyle>()
-        v.nodeDidLoad { n in
-            n.view.backgroundColor = UIColor.white
-            let node = Node<UIView, AbsoluteLayoutStyle>(view: UIView())
-            node.view.view?.backgroundColor = UIColor.red
-            node.size = ElementDual(x: .percent(0.5), y: .percent(0.5))
-            node.postion = ElementDual(x: .pt(10), y: .pt(100))
-            n.addNode(node: node)
-            let node2 = Node<UIView, AbsoluteLayoutStyle>(view: UIView())
-            node2.view.view?.backgroundColor = UIColor.yellow
-            node2.size = ElementDual(x: .percent(0.3), y: .percent(0.9))
-            node2.postion = ElementDual(x: .percent(0.7), y: .percent(0.1))
-            node.addNode(node: node2)
-        }
-        self.show(v, sender: nil)
+        
     }
 
     @Carrot

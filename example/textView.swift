@@ -37,19 +37,7 @@ public class PostTextStorage:NSTextStorage{
     public var atRegex:NSRegularExpression = try! NSRegularExpression(pattern: "(\\s|^)@\\S*(\\s|$)", options: .caseInsensitive)
     public var groupRegex:NSRegularExpression = try! NSRegularExpression(pattern: "(\\s|^)#\\S*(\\s|$)", options: .caseInsensitive)
     public override func processEditing() {
-//        guard let tv = self.textView else { return  }
-//        if (self.string.count > limit && limit > 0){
-//            let useLimitIndex = self.string.index(self.string.startIndex, offsetBy: limit)
-//            let useLimit = useLimitIndex.utf16Offset(in: self.string)
-//            var att = tv.typingAttributes
-//            att[.backgroundColor] = UIColor.red
-//            self.addAttributes(att, range: NSRange(location: useLimit, length: self.length - useLimit))
-//            att = tv.typingAttributes
-//            att[.backgroundColor] = UIColor.clear
-//            self.addAttributes(att, range: NSRange(location: 0, length: useLimit))
-//        }
         self.setAttributes(self.defaultAttribute, range: NSRange(location: 0, length: self.string.count))
-        NSTextAttachmentContainer
         self.loadHighlight(reg: atRegex, attribute: [.foregroundColor:UIColor.blue])
         self.loadHighlight(reg: groupRegex, attribute: [.foregroundColor:UIColor.green])
         super.processEditing()
