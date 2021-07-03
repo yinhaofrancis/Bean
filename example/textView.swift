@@ -8,7 +8,7 @@
 import UIKit
 
 open class textView:UITextView,GettrTextStorageProvider{
-    public func handle(storage: GettrTextStorage, originText: NSAttributedString, attachName: String) -> GettrAttachment? {
+    public func handle(storage: GettrTextStorage, originText: NSAttributedString, attachName: String) -> GettrAttachment {
         let label = UIButton(type: .system)
         let a = GettrAttachment(view: label)
         label .setAttributedTitle(originText, for: .normal)
@@ -24,12 +24,12 @@ open class textView:UITextView,GettrTextStorageProvider{
     public override init(frame: CGRect, textContainer: NSTextContainer?) {
         super.init(frame: frame, textContainer: textContainer)
         self.storage.configTextView(view: self)
-        storage.register(name: "button", regex: try! NSRegularExpression(pattern: "\\[\\S*\\]", options: .caseInsensitive))
+        storage.register(name: "button", regex: try! NSRegularExpression(pattern: "\\[\\S+\\]", options: .caseInsensitive))
         storage.provider = self
     }
     public required init?(coder: NSCoder) {
         super.init(coder: coder)
-        storage.register(name: "button", regex: try! NSRegularExpression(pattern: "\\[\\S*\\]", options: .caseInsensitive))
+        storage.register(name: "button", regex: try! NSRegularExpression(pattern: "\\[\\S+\\]", options: .caseInsensitive))
         self.storage.configTextView(view: self)
         storage.provider = self
     }
@@ -51,7 +51,7 @@ public class PostTextStorage:NSTextStorage{
         super.processEditing()
     }
     public func loadHighlight(reg:NSRegularExpression,attribute:[NSAttributedString.Key:Any]){
-        let result = reg.matches(in: self.string, options: .reportCompletion, range: NSRange(location: 0,length: self.string.count))
+        let result = reg.matches(in: self.string, options: .reportProgress, range: NSRange(location: 0,length: self.string.count))
         
         for i in result{
             self.setAttributes(attribute, range: i.range)

@@ -72,7 +72,7 @@ public class GettrAttachment:NSTextAttachment{
 public protocol GettrTextStorageProvider:AnyObject{
     func handle(storage:GettrTextStorage,
                 originText:NSAttributedString,
-                attachName:String)->GettrAttachment?
+                attachName:String)->GettrAttachment
 }
 
 public struct TokenRegex{
@@ -117,25 +117,25 @@ open class GettrTextStorage:NSTextStorage{
         print(str)
     }
     open override func processEditing() {
-        guard  let v = self.textView else {
+        guard  (self.textView != nil) , let provider = self.provider else {
             super.processEditing()
             return
         }
         self.addAttributes(self.typeAttribute, range: NSRange(location: 0, length: self.string.count))
         let aString = self.content
+        var catchedAttribute:NSAttributedString?
         let parsedAttributeString = NSMutableAttributedString()
         var checkEnd = false
         var range:NSRange = NSRange(location: 0, length: string.count)
         for (key,value) in self.tokenRegexMap{
             while let result = value.regex.firstMatch(in:aString.string, options: .reportCompletion, range: range) {
+                print(range);
+                print(result.range)
                 let subAttrStr = aString.attributedSubstring(from: result.range)
+                catchedAttribute = subAttrStr
                 let header = aString.attributedSubstring(from: NSRange(location: range.location, length: result.range.location - range.location))
                 parsedAttributeString.append(header)
-                guard let attach = self.provider?.handle(storage: self, originText: subAttrStr, attachName: key) else {
-                    range = NSRange(location: result.range.location + result.range.length, length: aString.length - result.range.location - result.range.length)
-                    parsedAttributeString.append(subAttrStr)
-                    continue
-                }
+                let attach = provider.handle(storage: self, originText: subAttrStr, attachName: key)
                 attach.textView = self.textView
                 attach.replaceText = subAttrStr
                 self.attachments.insert(attach)
@@ -161,7 +161,11 @@ open class GettrTextStorage:NSTextStorage{
             }
             self.attachments = self.allAttachments
         }
-        
+        if let noUsed = catchedAttribute , checkEnd == false {
+            let last = NSRange(location: 0, length: parsedAttributeString.length)
+            parsedAttributeString.append(noUsed)
+            self.edited([.editedAttributes,.editedCharacters], range: last, changeInLength: noUsed.length)
+        }
         super.processEditing()
     }
     public func configTextView(view:UITextView){
