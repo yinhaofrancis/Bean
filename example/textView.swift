@@ -31,6 +31,8 @@ open class textView:UITextView,GettrTextStorageProvider{
         storage.register(name: "button2", regex: try! NSRegularExpression(pattern: "@\\S*(\\s|$)", options: []),attribute: [.foregroundColor:UIColor.red])
         
         storage.register(name: "button3", regex: try! NSRegularExpression(pattern: "\\[[^\\[\\]]*\\]", options: []))
+        
+        storage.register(name: "button4", regex: try! NSRegularExpression(pattern: "@\\S*\\s", options: []))
         self.storage.configTextView(view: self)
         storage.provider = self
     }
