@@ -7,6 +7,12 @@
 
 import UIKit
 
+public struct GetterTokenAttribute{
+    var name:String
+    var regex:NSRegularExpression
+    var attribute:[NSAttributedString.Key:Any]
+}
+
 public class GettrAttachment:NSTextAttachment{
     
     public var displayContent:UIView
@@ -93,9 +99,11 @@ open class GettrTextStorage:NSTextStorage{
     public override var string: String{
         return self.content.string
     }
-    public var typeAttribute:[NSAttributedString.Key:Any] = [.font:UIFont.systemFont(ofSize: 16)]
+    public var typeAttribute:[NSAttributedString.Key:Any] = [.font:UIFont.systemFont(ofSize: 16),.foregroundColor:UIColor.black]
     
     public var tokenRegexMap:[String:TokenRegex] = [:]
+    
+    public var tokenAttributeMap:[String:GetterTokenAttribute] = [:]
     
     public override func attributes(at location: Int, effectiveRange range: NSRangePointer?) -> [NSAttributedString.Key : Any] {
         self.content.attributes(at: location, effectiveRange:range)
@@ -114,7 +122,6 @@ open class GettrTextStorage:NSTextStorage{
         self.content.replaceCharacters(in: range, with: str)
         self.edited(.editedCharacters, range: range, changeInLength: str.utf16.count - range.length)
         self.endEditing()
-        print(str)
     }
     open override func processEditing() {
         guard  (self.textView != nil) , let provider = self.provider else {
@@ -122,15 +129,21 @@ open class GettrTextStorage:NSTextStorage{
             return
         }
         self.addAttributes(self.typeAttribute, range: NSRange(location: 0, length: self.string.count))
+        for (_,j) in self.tokenAttributeMap{
+            let results = j.regex.matches(in: self.content.string, options: [], range: NSRange(location: 0, length: self.content.length))
+            for result in results {
+                self.content.addAttributes(j.attribute, range: result.range)
+                self.edited(.editedAttributes, range: result.range, changeInLength: 0)
+
+            }
+        }
         let aString = self.content
         var catchedAttribute:NSAttributedString?
         let parsedAttributeString = NSMutableAttributedString()
         var checkEnd = false
         var range:NSRange = NSRange(location: 0, length: string.count)
         for (key,value) in self.tokenRegexMap{
-            while let result = value.regex.firstMatch(in:aString.string, options: .reportCompletion, range: range) {
-                print(range);
-                print(result.range)
+            while let result = value.regex.firstMatch(in:aString.string, options: [], range: range) {
                 let subAttrStr = aString.attributedSubstring(from: result.range)
                 catchedAttribute = subAttrStr
                 let header = aString.attributedSubstring(from: NSRange(location: range.location, length: result.range.location - range.location))
@@ -166,6 +179,7 @@ open class GettrTextStorage:NSTextStorage{
             parsedAttributeString.append(noUsed)
             self.edited([.editedAttributes,.editedCharacters], range: last, changeInLength: noUsed.length)
         }
+
         super.processEditing()
     }
     public func configTextView(view:UITextView){
@@ -196,5 +210,8 @@ open class GettrTextStorage:NSTextStorage{
     }
     public func register(name:String,regex:NSRegularExpression){
         tokenRegexMap[name] = TokenRegex(regex: regex, name: name)
+    }
+    public func register(name:String,regex:NSRegularExpression,attribute:[NSAttributedString.Key:Any]){
+        tokenAttributeMap[name] = GetterTokenAttribute(name: name, regex: regex, attribute: attribute)
     }
 }
